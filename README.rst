@@ -45,7 +45,7 @@ will create a ``setup.py`` file and a ``py2exe`` compiled exe as soon as I
 can.
 
 To try ``quichem`` out from the source, make sure you have the above
-dependencies. Locate to the ``quichem`` folder and run:
+dependencies. Locate to the ``quichem`` folder and run::
 
     $ python -m quichem.gui.pyside
 
