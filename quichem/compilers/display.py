@@ -52,7 +52,7 @@ class DisplayCompiler(Compiler):
         if state.state == '':
             return ''
         if state.state == 'l':
-            return u'(\u2113)'
+            return '(\u2113)'
         return '({})'.format(state.state)
 
     def handle_element(self, element):

@@ -44,8 +44,8 @@ At the moment, you will just have to download the source and try it out. I
 will create a ``setup.py`` file and a ``py2exe`` compiled exe as soon as I
 can.
 
-To try ``quichem`` out from the source, make sure you have the above
-dependencies. Locate to the ``quichem`` folder and run::
+To run``quichem`` from source, make sure you have the above dependencies.
+Locate to the ``quichem`` folder and run::
 
     $ python -m quichem.gui.pyside
 
