@@ -21,8 +21,8 @@ from __future__ import unicode_literals
 import re
 import string
 
-from pyparsing import (Literal, oneOf, Optional, Suppress, FollowedBy,
-                       OneOrMore, ZeroOrMore, Forward, Word, nums, StringEnd)
+from pyparsing import (FollowedBy, Forward, Literal, OneOrMore, Optional,
+                       StringEnd, Suppress, Word, ZeroOrMore, nums, oneOf)
 
 import quichem.tokens
 
@@ -58,7 +58,22 @@ def alpha_factory():
 
 # Parse Actions
 def element_factory(args):
-    """Parse action to ..."""
+    """Parse action to create a list of element symbols.
+
+    Parameters
+    ----------
+    args : array-like
+        Contains a mixture of `quichem.tokens.CompoundSegment`s and
+        strings of chained element symbols. Strings will be split before
+        being added to the list. This function splits by taking the
+        longest element symbol first, meaning ambiguous cases can always
+        be clarified through manual splitting of symbols.
+
+    Returns
+    -------
+    list of `quichem.tokens.CompoundSegment`s
+
+    """
     list_ = []
     for item in args:
         if isinstance(item, quichem.tokens.CompoundSegment):
@@ -77,6 +92,10 @@ def counter_factory(args):
     args : array-like
         Must be in the format [item_0, item_1, item_2, ..., item_n,
         count_n] (only the last item is a counter).
+
+    Returns
+    -------
+    list of `quichem.tokens.Counter`s
 
     """
     list_ = []
@@ -116,6 +135,12 @@ def parser_factory():
     lbracket = (Literal("'") + ~FollowedBy(number)).setName('left bracket')
     rbracket = (Literal("'") + FollowedBy(number)).setName('right bracket')
 
+    # Note: Support for isotopes can be added by requiring brackets around
+    # the value. E.g. 3'14'c -> 3^{14}C, '12''nh4'2s -> ^{12}(NH_3)_2S.
+    # The proton value can be automatically provided based on the following
+    # element, and can be overridden by manually specifying a value (e.g.
+    # '14;4'c -> ^{14}_4C ).
+
     # Common
     separator = ((equals | dash) + ~FollowedBy(semicolon)) | Literal('/')
     # FIXME: rename to state
@@ -146,7 +171,8 @@ def parser_factory():
 
     state_name.setParseAction(quichem.tokens.State).setName('state')
     charge.setParseAction(quichem.tokens.Charge).setName('charge')
-    coefficient.setParseAction(quichem.tokens.Coefficient).setName('coefficient')
+    coefficient.setParseAction(
+        quichem.tokens.Coefficient).setName('coefficient')
     element_chain.setParseAction(element_factory).setName('element')
     element.setParseAction(element_factory)
     group.setParseAction(quichem.tokens.Group).setName('group')

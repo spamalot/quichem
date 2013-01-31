@@ -23,7 +23,12 @@ from quichem.tokens import Counter, Element, Group, Item, Separator
 
 class Compiler(object):
 
-    """Abstract compiler for `quichem` ASTs."""
+    """Abstract compiler for `quichem` ASTs.
+
+    `handle_*` methods handle the corresponding tokens in
+    `quichem.tokens`.
+
+    """
 
     def __init__(self):
         self.result = None

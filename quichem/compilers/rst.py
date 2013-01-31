@@ -26,7 +26,8 @@ class RstCompiler(DisplayCompiler):
     def compile(self, ast):
         return re.sub(r'(\\ :(?:sub|sup):`)([^`]+?)`\\ \1([^`]+?)`\\ ',
                       r'\1\2\3`\\ ',
-                      DisplayCompiler.compile(self, ast)).replace('  ', ' ')
+                      DisplayCompiler.compile(self, ast)
+                      ).replace(r'\ \ ', r'\ ').rstrip(r'\ ')
 
     def handle_charge(self, charge):
         charge = DisplayCompiler.handle_charge(self, charge)

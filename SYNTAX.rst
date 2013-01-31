@@ -132,7 +132,8 @@ Input     Output
 ========  ============
 
 If the charge has a numeric value, a dot (``.``) must be used to distinguish
-it from a subscript_.
+it from a subscript_. A dot can be placed before a subscript even if there
+is no preceding subscript, in which case it will be ignored.
 
 ==========  =======================
 Examples
@@ -140,6 +141,7 @@ Examples
 Input       Output
 ==========  =======================
 ``o2=``     O\ :sub:`2`\ :sup:`+`
+``o2.=``    O\ :sub:`2`\ :sup:`+`
 ``o.2=``    O\ :sup:`2+`
 ``so4.2=``  SO\ :sub:`4`\ :sup:`2+`
 ==========  =======================
@@ -167,16 +169,23 @@ Input        Output
 ===========  =================
 
 If the compound does not end with a charge or subscript, a semicolon (``;``)
-must be placed before the state abbreviation to avoid ambiguity.
+must be placed before the state's abbreviation to avoid ambiguity.
+Additionally, solids require a semicolon after subscripts, otherwise the
+``s`` would be interpreted as sulphur. Semicolons can be used in unambiguous
+cases, in which they will be ignored.
 
-========  ==============
+=========  =========================
 Examples
-------------------------
-Input     Output
-========  ==============
-``lis``   LiS
-``li;s``  Li\ :sub:`(s)`
-========  ==============
+------------------------------------
+Input      Output
+=========  =========================
+``heg``    He  *(extra "g" ignored)*
+``he;g``   He\ :sub:`(g)`
+``li2s``   Li\ :sub:`2`\ S
+``li2;s``  Li\ :sub:`2(s)`
+``li=s``   Li\ :sup:`+`\ :sub:`(s)`
+``li=;s``  Li\ :sup:`+`\ :sub:`(s)`
+=========  =========================
 
 
 Coefficients
@@ -204,9 +213,10 @@ Examples
 -----------------------------------------------------------
 Input           Output
 ==============  ===========================================
-``cocl2/6h2o``  CoCl\ :sub:`2`\ • 6H\ :sub:`2`\ O
-``li3=/6h2o``   Li\ :sub:`3`\ \ :sup:`+`\ • 6H\ :sub:`2`\ O
+``cocl2/6h2o``  CoCl\ :sub:`2`\  • 6H\ :sub:`2`\ O
+``li3=/6h2o``   Li\ :sub:`3`\ :sup:`+`\  • 6H\ :sub:`2`\ O
 ==============  ===========================================
+
 
 .. _sum:
 .. _arrow:
@@ -218,14 +228,14 @@ Elements and compounds can be added together to form fragments of or full
 chemical equations. Equals (``=``) is used to add elements together, while
 minus (``-``) creates an equation arrow ("→"). |plus_note|
 
-=========================  =================================================================================
+=========================  ===============================================================================
 Examples
-------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------
 Input                      Output
-=========================  =================================================================================
+=========================  ===============================================================================
 ``mgo=h2o-mg'oh'2``        MgO + H\ :sub:`2`\ O → Mg(OH)\ :sub:`2`
-``2cl-aq=2ag=aq-2agcl;s``  2Cl\ :sup:`-`\ \ :sub:`(aq)`\ + 2Ag\ :sup:`+`\ \ :sub:`(aq)`\ → 2AgCl\ :sub:`(s)`
-=========================  =================================================================================
+``2cl-aq=2ag=aq-2agcl;s``  2Cl\ :sup:`-`\ :sub:`(aq)`\  + 2Ag\ :sup:`+`\ :sub:`(aq)`\  → 2AgCl\ :sub:`(s)`
+=========================  ===============================================================================
 
 .. |plus_note| replace::
 

@@ -48,7 +48,8 @@ def on_value_change(val):
         rst_source.setPlainText(rst_compiler.compile(ast))
 
 
-from PySide.QtGui import QWidget, QVBoxLayout, QLineEdit, QApplication, QPlainTextEdit, QSizePolicy
+from PySide.QtGui import (QWidget, QVBoxLayout, QLineEdit, QApplication,
+                          QPlainTextEdit, QSizePolicy)
 from PySide.QtWebKit import QWebView
 app = QApplication(())
 w = QWidget()

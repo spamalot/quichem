@@ -24,8 +24,9 @@ class PlainCompiler(DisplayCompiler):
 
     """Plain text compiler.
 
-    Has exact same output as `DisplayCompiler`, but adds spacing to make
-    different components distinguishable.
+    Has exact same output as
+    `quichem.compilers.display.DisplayCompiler`, but adds spacing to
+    make different components distinguishable.
 
     """
 

@@ -21,6 +21,12 @@ from quichem.compilers.compiler import Compiler
 
 class DisplayCompiler(Compiler):
 
+    """Generic compiler for rendering to displayable text formats.
+
+    Output from this compiler and its subclasses is in UTF-8.
+
+    """
+
     def handle_separator(self, separator):
         if separator.type_ == '=':
             return ' + '
