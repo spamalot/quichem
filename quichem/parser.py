@@ -1,0 +1,158 @@
+# This file is part of quichem.
+#
+# quichem is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# quichem is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with quichem.  If not, see <http://www.gnu.org/licenses/>.
+
+"""Parsing utilities for `quichem`."""
+
+
+from __future__ import unicode_literals
+
+import re
+import string
+
+from pyparsing import (Literal, oneOf, Optional, Suppress, FollowedBy,
+                       OneOrMore, ZeroOrMore, Forward, Word, nums, StringEnd)
+
+import quichem.tokens
+
+
+ELEMENTS = '|'.join(sorted(
+    ('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V '
+    'Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc '
+    'Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu '
+    'Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi '
+    'Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr '
+    'Rf Db Sg Bh Hs Mt Ds Rg Cn Uut Fl Uup Lv Uus Uuo'
+    ).lower().split(), key=len, reverse=True))
+
+DEFAULT_COUNT_NUMBER = '1'
+DEFAULT_CHARGE_NUMBER = '1'
+DEFAULT_COEFFICIENT = quichem.tokens.Coefficient(['1'])
+DEFAULT_CHARGE = quichem.tokens.Charge(['0', ''])
+DEFAULT_STATE = quichem.tokens.State([''])
+
+
+# Token Factories
+def number_factory():
+    """Creates a new `pyparsing` integer."""
+    return Word(nums).setName('number')
+
+
+def alpha_factory():
+    """Creates a new `pyparsing` word matching lower case ascii letters.
+
+    """
+    return Word(string.ascii_lowercase).setName('string')
+
+
+# Parse Actions
+def element_factory(args):
+    """Parse action to ..."""
+    list_ = []
+    for item in args:
+        if isinstance(item, quichem.tokens.CompoundSegment):
+            list_.append(item)
+        else:
+            list_.extend(quichem.tokens.Element([element])
+                         for element in re.findall(ELEMENTS, item))
+    return list_
+
+
+def counter_factory(args):
+    """Parse action to create a counter for every item in a list.
+
+    Parameters
+    ----------
+    args : array-like
+        Must be in the format [item_0, item_1, item_2, ..., item_n,
+        count_n] (only the last item is a counter).
+
+    """
+    list_ = []
+    for item in args[:-2]:
+        list_.append(quichem.tokens.Counter([item, '1']))
+    list_.append(quichem.tokens.Counter([args[-2], args[-1]]))
+    return list_
+
+
+# Syntax
+def parser_factory():
+    """Create the parser for the `quichem` library.
+
+    The parser handles coefficients, compounds, compounds, ions,
+    subscripts, and states. Below a several examples and what they
+    translate to in plain text.
+
+    ``3h2o;l`` -> 3H2O(l)
+    ``mg2=`` -> Mg2+
+    ``cmgali`` -> CmGaLi
+    ``c.mgali`` -> CMgAlI
+
+    For a full syntax description, see SYNTAX.rst, included with the
+    library.
+
+    Returns
+    -------
+    The `quichem` parser.
+
+    """
+    # Basic
+    dot = Literal('.').setName('dot')
+    semicolon = Literal(';').setName('semicolon')
+    dash = Literal('-').setName('dash')
+    equals = Literal('=').setName('equals')
+    number = number_factory()
+    lbracket = (Literal("'") + ~FollowedBy(number)).setName('left bracket')
+    rbracket = (Literal("'") + FollowedBy(number)).setName('right bracket')
+
+    # Common
+    separator = ((equals | dash) + ~FollowedBy(semicolon)) | Literal('/')
+    # FIXME: rename to state
+    state_name = oneOf('s l g aq')
+    # FIXME rename/move following
+    state = Suppress(Optional(semicolon)) + Optional(state_name, DEFAULT_STATE)
+    # FIXME: rename/move following
+    follow_state = semicolon | (Optional(semicolon) + state_name) | separator | StringEnd()
+
+    charge = Optional(number, DEFAULT_CHARGE_NUMBER) + (equals | dash)
+    coefficient = number_factory()
+    element_chain = alpha_factory()
+    element = element_chain + ZeroOrMore((Suppress(dot) + element_chain))
+
+    compound = Forward()
+    compound_segment = Forward()
+    group = Suppress(lbracket) + compound_segment + Suppress(rbracket)
+    counter = (element | group) + Optional(number, DEFAULT_COUNT_NUMBER)
+    compound_segment << OneOrMore(counter)
+    compound << (counter + ZeroOrMore(compound_segment))
+    item = (Optional(coefficient, DEFAULT_COEFFICIENT) +
+            compound +
+            # FIXME: simplify following
+            Optional(Suppress(Optional(dot)) + charge + FollowedBy(follow_state), DEFAULT_CHARGE) +
+            state)
+
+    expression = item + ZeroOrMore(separator + item)
+
+    state_name.setParseAction(quichem.tokens.State).setName('state')
+    charge.setParseAction(quichem.tokens.Charge).setName('charge')
+    coefficient.setParseAction(quichem.tokens.Coefficient).setName('coefficient')
+    element_chain.setParseAction(element_factory).setName('element')
+    element.setParseAction(element_factory)
+    group.setParseAction(quichem.tokens.Group).setName('group')
+    counter.setParseAction(counter_factory).setName('counter')
+    compound.setParseAction(quichem.tokens.Compound).setName('compound')
+    item.setParseAction(quichem.tokens.Item).setName('item')
+    separator.setParseAction(quichem.tokens.Separator).setName('separator')
+
+    return expression
