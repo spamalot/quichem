@@ -22,6 +22,8 @@ Input                      reStructuredText Output
 ``2cl-aq=2ag=aq-2agcl;s``  2Cl\ :sup:`-`\ :sub:`(aq)`\  + 2Ag\ :sup:`+`\ :sub:`(aq)`\  → 2AgCl\ :sub:`(s)`
 =========================  ===============================================================================
 
+For more examples and a detailed description, see `syntax.rst <syntax.rst>`_.
+
 
 Current Output Format Support
 -----------------------------
