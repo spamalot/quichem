@@ -42,13 +42,13 @@ Dependencies
 
 - Python 2.7 or Python >= 3.0
 - ``pyparsing``
-- ``PySide`` (for GUI front-end)
+- ``PySide`` (optional; for GUI front-end)
 
 At the moment, you will just have to download the source and try it out. I
 will create a ``setup.py`` file and a ``py2exe`` compiled exe as soon as I
 can.
 
-To run``quichem`` from source, make sure you have the above dependencies.
+To run ``quichem`` from source, make sure you have the above dependencies.
 Locate to the ``quichem`` folder and run::
 
     $ python -m quichem.gui.pyside
