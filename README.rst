@@ -6,6 +6,8 @@
 chemical formulae and equations. Entering data does not require any
 modifier keys or keystrokes to be pressed.
 
+``quichem`` is distributed under the GNU LGPL.
+
 
 Examples
 --------
@@ -38,7 +40,7 @@ Dependencies
 
 - Python 2.7 or Python >= 3.0
 - ``pyparsing``
-- ``PySide`` (for GUI frontend)
+- ``PySide`` (for GUI front-end)
 
 At the moment, you will just have to download the source and try it out. I
 will create a ``setup.py`` file and a ``py2exe`` compiled exe as soon as I
@@ -57,3 +59,13 @@ Screenshots
 -----------
 
 Coming soon.
+
+
+Roadmap
+-------
+
+Below are some features which will likely be implemented in ``quichem`` in the
+future.
+
+- isotopes (through indication of atomic mass)
+- a PyGTK front-end
