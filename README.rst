@@ -6,11 +6,12 @@
 chemical formulae and equations. Entering data does not require any
 modifier keys or keystrokes to be pressed.
 
+
 Examples
 --------
 
 =========================  ===============================================================================
-Input                      Output
+Input                      reStructuredText Output
 =========================  ===============================================================================
 ``o2aq``                   O\ :sub:`2(aq)`
 ``li=``                    Li\ :sup:`+`
@@ -20,12 +21,17 @@ Input                      Output
 =========================  ===============================================================================
 
 
+Current Output Format Support
+-----------------------------
+
+- plain text
+- reStructuredText
+- HTML
+- LaTeX
+
+
 Installation
 -----------
-
-At the moment, you will just have to download the source and try it out. I
-will create a ``setup.py`` file and a ``py2exe`` compiled exe as soon as I
-can.
 
 Dependencies
 ++++++++++++
@@ -33,6 +39,18 @@ Dependencies
 - Python 2.7 or Python >= 3.0
 - ``pyparsing``
 - ``PySide`` (for GUI frontend)
+
+At the moment, you will just have to download the source and try it out. I
+will create a ``setup.py`` file and a ``py2exe`` compiled exe as soon as I
+can.
+
+To try ``quichem`` out from the source, make sure you have the above
+dependencies. Locate to the ``quichem`` folder and run:
+
+    $ python -m quichem.gui.pyside
+
+This will create a little ``Qt`` window demonstrating how the various output
+formats render your input.
 
 
 Screenshots
