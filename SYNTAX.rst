@@ -174,18 +174,18 @@ Additionally, solids require a semicolon after subscripts, otherwise the
 ``s`` would be interpreted as sulphur. Semicolons can be used in unambiguous
 cases, in which they will be ignored.
 
-=========  =========================
+=========  =========================  =====================
 Examples
-------------------------------------
-Input      Output
-=========  =========================
-``heg``    He  *(extra "g" ignored)*
+-----------------------------------------------------------
+Input      Output                     Notes
+=========  =========================  =====================
+``heg``    He                         *(extra "g" ignored)*
 ``he;g``   He\ :sub:`(g)`
 ``li2s``   Li\ :sub:`2`\ S
 ``li2;s``  Li\ :sub:`2(s)`
 ``li=s``   Li\ :sup:`+`\ :sub:`(s)`
 ``li=;s``  Li\ :sup:`+`\ :sub:`(s)`
-=========  =========================
+=========  =========================  =====================
 
 
 Coefficients

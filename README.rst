@@ -70,6 +70,9 @@ Roadmap
 Below are some features which will likely be implemented in ``quichem`` in the
 future.
 
+- full wxPython clipboard support
+- Windows binaries
+- ``setup.py`` files for installing and manual building
 - isotopes (through indication of atomic mass)
 - a PyGTK front-end
 - a Win32 GUI front-end
