@@ -16,59 +16,88 @@
 
 from __future__ import unicode_literals
 
-from pyparsing import ParseException
+import functools
 
-import quichem.parser
-import quichem.compilers.html
-import quichem.compilers.plain
-import quichem.compilers.latex
-import quichem.compilers.rst
-
-
-parser = quichem.parser.parser_factory()
-html_compiler = quichem.compilers.html.HtmlCompiler()
-plain_compiler = quichem.compilers.plain.PlainCompiler()
-latex_compiler = quichem.compilers.latex.LatexCompiler()
-rst_compiler = quichem.compilers.rst.RstCompiler()
-
-
-def on_value_change(val):
-    try:
-        ast = parser.parseString(val)
-    except ParseException as e:
-        view.setHtml(str(e))
-        for source in (html_source, plain_source, latex_source, rst_source):
-            source.setPlainText('')
-    else:
-        html = html_compiler.compile(ast)
-        view.setHtml(html)
-        html_source.setPlainText(html)
-        plain_source.setPlainText(plain_compiler.compile(ast))
-        latex_source.setPlainText(latex_compiler.compile(ast))
-        rst_source.setPlainText(rst_compiler.compile(ast))
-
-
-from PySide.QtGui import (QWidget, QVBoxLayout, QLineEdit, QApplication,
-                          QPlainTextEdit, QSizePolicy)
+from PySide.QtCore import Qt, QMimeData
+from PySide.QtGui import (QWidget, QFormLayout, QHBoxLayout, QLineEdit,
+                          QApplication, QTextEdit, QSizePolicy, QVBoxLayout,
+                          QPushButton, QScrollArea)
 from PySide.QtWebKit import QWebView
+
+from quichem.gui import generic
+
+
+class ExpandingTextEdit(QTextEdit):
+
+    def __init__(self, *args, **kw):
+        QTextEdit.__init__(self, *args, **kw)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.textChanged.connect(self.change_size)
+
+    def change_size(self):
+        self.setMinimumHeight(self.document().size().height())
+
+    def resizeEvent(self, event):
+        QTextEdit.resizeEvent(self, event)
+        self.change_size()
+
+
+class PysideGui(generic.GenericGui):
+
+    def __init__(self):
+        generic.GenericGui.__init__(self)
+        self.window = QScrollArea()
+        self.window.setWindowTitle('quichem-pyside')
+        self.window.setWidgetResizable(True)
+        self.widget = QWidget()
+        QFormLayout(self.widget)
+        self.widget.layout().setContentsMargins(*(8,) * 4)
+        edit = QLineEdit()
+        view_layout = QVBoxLayout()
+        self.view = QWebView()
+        self.view.setMinimumHeight(self.view.fontMetrics().height() * 3)
+        self.view.setHtml('')
+        button = QPushButton('Copy Formatted Text')
+        button.setSizePolicy(*(QSizePolicy.Minimum,) * 2)
+        button.clicked.connect(self.set_clipboard_html)
+        view_layout.addWidget(self.view)
+        view_layout.addWidget(button, alignment=Qt.AlignRight)
+        self.widget.layout().addRow(edit)
+        self.widget.layout().addRow(view_layout)
+        edit.textChanged.connect(self.change_value)
+        self.window.setWidget(self.widget)
+        self.window.show()
+
+    def make_source(self, name):
+        layout = QHBoxLayout()
+        layout.setContentsMargins(*(0,) * 4)
+        source = ExpandingTextEdit()
+        source.setStyleSheet('min-width: 0; min-height: 0')
+        source.setReadOnly(True)
+        button = QPushButton('Copy')
+        button.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.MinimumExpanding)
+        button.clicked.connect(functools.partial(self.set_clipboard, source))
+        layout.addWidget(source)
+        layout.addWidget(button)
+        self.widget.layout().addRow(name, layout)
+        return source
+
+    def set_html(self, html):
+        self.view.setHtml(html)
+
+    def set_source(self, widget, source):
+        widget.setPlainText(source)
+
+    def set_clipboard_html(self):
+        data = QMimeData()
+        data.setHtml(self.view.page().mainFrame().toHtml())
+        QApplication.clipboard().setMimeData(data)
+
+    def set_clipboard(self, source):
+        QApplication.clipboard().setText(source.toPlainText())
+
+
 app = QApplication(())
-w = QWidget()
-l = QVBoxLayout()
-w.setLayout(l)
-edit = QLineEdit()
-view = QWebView()
-view.setHtml('')
-html_source = QPlainTextEdit()
-plain_source = QPlainTextEdit()
-latex_source = QPlainTextEdit()
-rst_source = QPlainTextEdit()
-l.addWidget(edit)
-l.addWidget(view)
-l.addWidget(html_source)
-l.addWidget(plain_source)
-l.addWidget(latex_source)
-l.addWidget(rst_source)
-edit.textChanged.connect(on_value_change)
-w.resize(500, 436)
-w.show()
+gui = PysideGui()
+gui.run()
 app.exec_()

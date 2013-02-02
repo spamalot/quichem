@@ -2,8 +2,8 @@
 ``quichem``
 ===========
 
-``quichem`` is a Python utility allowing for fast input and parsing of
-chemical formulae and equations. Entering data does not require any
+``quichem`` is a utility written in pure Python allowing for fast input and
+parsing of chemical formulae and equations. Entering data does not require any
 modifier keys or keystrokes to be pressed.
 
 ``quichem`` is distributed under the GNU LGPL.
@@ -43,6 +43,7 @@ Dependencies
 - Python 2.7 or Python >= 3.0
 - ``pyparsing``
 - ``PySide`` (optional; for GUI front-end)
+- ``wxPython`` (optional; for GUI front-end)
 
 At the moment, you will just have to download the source and try it out. I
 will create a ``setup.py`` file and a ``py2exe`` compiled exe as soon as I
@@ -71,3 +72,4 @@ future.
 
 - isotopes (through indication of atomic mass)
 - a PyGTK front-end
+- a Win32 GUI front-end

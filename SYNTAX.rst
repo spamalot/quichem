@@ -82,8 +82,8 @@ Input        Output
 ===========  ======================================
 
 Since element names are not capitalized, there are several ambiguous cases.
-To clarify ambiguous cases, put a dot (``.``) at the *first* position in the
-compound which is ambiguous.
+To clarify ambiguous cases, put a dot (``.``) at the *first* ambiguous
+position in the compound.
 
 Some common ambiguous cases to remember are PO and HS. A dot must be used to
 separate the elements in these cases, or else Po and Hs are received as
