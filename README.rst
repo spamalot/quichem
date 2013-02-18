@@ -2,9 +2,9 @@
 ``quichem``
 ===========
 
-..sidebar:: Contents
+.. sidebar:: Contents
 
-    ..contents:: :local:
+    .. contents:: :local:
 
 
 ``quichem`` is a utility written in pure Python allowing for fast input and
@@ -13,8 +13,8 @@ modifier keys or keystrokes to be pressed.
 
 ``quichem`` is distributed under the GNU LGPL.
 
-Looking for the Windows application? Download it from ``quichem``s `SourceForge
-page <http://sourceforge.net/projects/quichem>`_.
+Looking for the Windows application? Download it from ``quichem``\ s
+`SourceForge page <http://sourceforge.net/projects/quichem>`_.
 
 
 Examples
@@ -58,7 +58,7 @@ Dependencies
 Binaries
 ++++++++
 A Windows binary for the ``PySide`` ``quichem`` front-end can be downloaded
-from  ``quichem``s
+from  ``quichem``\ s
 `SourceForge page <http://sourceforge.net/projects/quichem>`_.
 
 There is currently no pre-build binary for the ``wxPython`` front-end, nor an
