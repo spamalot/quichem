@@ -97,7 +97,7 @@ Screenshots
 
 .. figure:: http://c.fsdn.com/con/app/proj/quichem/screenshots/screenshot.png
 
-    *``quichem-pyside`` running on Windows 7.*
+    ``quichem-pyside`` *running on Windows 7.*
 
 
 Roadmap

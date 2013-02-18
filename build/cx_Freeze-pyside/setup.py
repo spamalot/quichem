@@ -16,6 +16,8 @@
 import sys
 from cx_Freeze import setup, Executable
 
+sys.path.insert(0, '../..')
+
 build_exe_options = {
     'packages': ['quichem'],
      'includes': ['pyparsing', 'PySide', 'PySide.QtCore', 'PySide.QtGui'],
@@ -34,6 +36,6 @@ setup(name='quichem-pyside',
       version='2013-02-18',
       description='quichem',
       options={'build_exe': build_exe_options},
-      executables=[Executable('quichem/gui/pyside.py',
+      executables=[Executable('../../quichem/gui/pyside.py',
                               targetName='quichem-pyside.exe',
                               base=base)])
