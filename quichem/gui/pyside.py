@@ -21,8 +21,7 @@ import functools
 from PySide.QtCore import Qt, QMimeData
 from PySide.QtGui import (QWidget, QFormLayout, QHBoxLayout, QLineEdit,
                           QApplication, QTextEdit, QSizePolicy, QVBoxLayout,
-                          QPushButton, QScrollArea)
-from PySide.QtWebKit import QWebView
+                          QPushButton, QScrollArea, QFont)
 
 from quichem.gui import generic
 
@@ -54,9 +53,12 @@ class PysideGui(generic.GenericGui):
         self.widget.layout().setContentsMargins(*(8,) * 4)
         edit = QLineEdit()
         view_layout = QVBoxLayout()
-        self.view = QWebView()
+        self.view = QTextEdit()
+        self.view.setReadOnly(True)
+        font = QFont('Times', self.view.font().pointSize() * 1.5)
+        font.setStyleHint(QFont.Serif)
+        self.view.setFont(font)
         self.view.setMinimumHeight(self.view.fontMetrics().height() * 3)
-        self.view.setHtml('')
         button = QPushButton('Copy Formatted Text')
         button.setSizePolicy(*(QSizePolicy.Minimum,) * 2)
         button.clicked.connect(self.set_clipboard_html)
@@ -83,14 +85,14 @@ class PysideGui(generic.GenericGui):
         return source
 
     def set_html(self, html):
-        self.view.setHtml(html)
+        self.view.setText(html)
 
     def set_source(self, widget, source):
         widget.setPlainText(source)
 
     def set_clipboard_html(self):
         data = QMimeData()
-        data.setHtml(self.view.page().mainFrame().toHtml())
+        data.setHtml(self.view.document().toHtml())
         QApplication.clipboard().setMimeData(data)
 
     def set_clipboard(self, source):

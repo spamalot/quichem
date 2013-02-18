@@ -31,9 +31,9 @@ class HtmlCompiler(DisplayCompiler):
         if separator.type_ == '=':
             return '&nbsp;+&nbsp;'
         if separator.type_ == '-':
-            return '&nbsp;&#x2192&nbsp;'
+            return '&nbsp;&#x2192;&nbsp;'
         if separator.type_ == '/':
-            return '&nbsp;&#x2022&nbsp;'
+            return '&nbsp;&#x2022;&nbsp;'
         raise Exception('Separator not supported.')
 
     def handle_charge(self, charge):
