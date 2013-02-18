@@ -1,3 +1,5 @@
+.. _SourceForge page: http://sourceforge.net/projects/quichem
+
 ===========
 ``quichem``
 ===========
@@ -6,10 +8,10 @@
 parsing of chemical formulae and equations. Entering data does not require any
 modifier keys or keystrokes to be pressed.
 
-``quichem`` is distributed under the GNU LGPL.
+``quichem`` is distributed under the GNU LGPL v3.0.
 
 Looking for the Windows application? Download it from ``quichem``'s
-`SourceForge page <http://sourceforge.net/projects/quichem>`_.
+`SourceForge page`_.
 
 
 Examples
@@ -53,8 +55,7 @@ Dependencies
 Binaries
 ++++++++
 A Windows binary for the ``PySide`` ``quichem`` front-end can be downloaded
-from  ``quichem``'s
-`SourceForge page <http://sourceforge.net/projects/quichem>`_.
+from  ``quichem``'s `SourceForge page`_.
 
 There is currently no pre-build binary for the ``wxPython`` front-end, nor an
 installer for the ``quichem`` Python library.
@@ -95,9 +96,8 @@ Screenshots
 -----------
 
 .. figure:: http://c.fsdn.com/con/app/proj/quichem/screenshots/screenshot.png
-    :align: center
 
-    quichem-pyside running on Windows 7.
+    *``quichem-pyside`` running on Windows 7.*
 
 
 Roadmap
