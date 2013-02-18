@@ -2,6 +2,11 @@
 ``quichem``
 ===========
 
+..sidebar:: Contents
+
+    ..contents:: :local:
+
+
 ``quichem`` is a utility written in pure Python allowing for fast input and
 parsing of chemical formulae and equations. Entering data does not require any
 modifier keys or keystrokes to be pressed.
@@ -94,8 +99,10 @@ The Windows binary will be located in ``build/``.
 Screenshots
 -----------
 
-.. image:: http://c.fsdn.com/con/app/proj/quichem/screenshots/screenshot.png
+.. figure:: http://c.fsdn.com/con/app/proj/quichem/screenshots/screenshot.png
     :align: center
+
+    quichem-pyside running on Windows 7.
 
 
 Roadmap
