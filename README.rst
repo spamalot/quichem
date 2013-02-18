@@ -2,18 +2,13 @@
 ``quichem``
 ===========
 
-.. sidebar:: Contents
-
-    .. contents:: :local:
-
-
 ``quichem`` is a utility written in pure Python allowing for fast input and
 parsing of chemical formulae and equations. Entering data does not require any
 modifier keys or keystrokes to be pressed.
 
 ``quichem`` is distributed under the GNU LGPL.
 
-Looking for the Windows application? Download it from ``quichem``\ s
+Looking for the Windows application? Download it from ``quichem``'s
 `SourceForge page <http://sourceforge.net/projects/quichem>`_.
 
 
@@ -58,7 +53,7 @@ Dependencies
 Binaries
 ++++++++
 A Windows binary for the ``PySide`` ``quichem`` front-end can be downloaded
-from  ``quichem``\ s
+from  ``quichem``'s
 `SourceForge page <http://sourceforge.net/projects/quichem>`_.
 
 There is currently no pre-build binary for the ``wxPython`` front-end, nor an
