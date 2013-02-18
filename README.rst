@@ -8,6 +8,9 @@ modifier keys or keystrokes to be pressed.
 
 ``quichem`` is distributed under the GNU LGPL.
 
+Looking for the Windows application? Download it from ``quichem``s `SourceForge
+page <http://sourceforge.net/projects/quichem>`_.
+
 
 Examples
 --------
@@ -43,25 +46,56 @@ Dependencies
 - Python 2.7 or Python >= 3.0
 - ``pyparsing``
 - ``PySide`` (optional; for GUI front-end)
+- ``cx_Freeze`` (optional; for building ``PySide`` GUI front-end)
 - ``wxPython`` (optional; for GUI front-end)
 
-At the moment, you will just have to download the source and try it out. I
-will create a ``setup.py`` file and a ``py2exe`` compiled exe as soon as I
-can.
 
-To run ``quichem`` from source, make sure you have the above dependencies.
-Locate to the ``quichem`` folder and run::
+Binaries
+++++++++
+A Windows binary for the ``PySide`` ``quichem`` front-end can be downloaded
+from  ``quichem``s
+`SourceForge page <http://sourceforge.net/projects/quichem>`_.
+
+There is currently no pre-build binary for the ``wxPython`` front-end, nor an
+installer for the ``quichem`` Python library.
+
+
+Running from Source
++++++++++++++++++++
+
+Locate to the ``quichem`` directory and run::
 
     $ python -m quichem.gui.pyside
 
-This will create a little ``Qt`` window demonstrating how the various output
-formats render your input.
+for the ``PySide`` front-end, or::
+
+    $ python -m quichem.gui.wxpython
+
+for the ``wxPython`` front-end.
+
+This will create a small ``Qt`` or ``wxWidgets`` window demonstrating how the
+various output formats render your input.
+
+
+Building from Source
+++++++++++++++++++++
+
+PySide Front-end
+~~~~~~~~~~~~~~~~
+
+Locate to the ``build/cx_Freeze-pyside/`` subdirectory of the ``quichem``
+directory. Run::
+
+    $ python setup.py build
+
+The Windows binary will be located in ``build/``.
 
 
 Screenshots
 -----------
 
-Coming soon.
+.. image:: http://c.fsdn.com/con/app/proj/quichem/screenshots/screenshot.png
+    :align: center
 
 
 Roadmap
@@ -71,7 +105,7 @@ Below are some features which will likely be implemented in ``quichem`` in the
 future.
 
 - full wxPython clipboard support
-- Windows binaries
+- Windows binaries for wxPython front-end
 - ``setup.py`` files for installing and manual building
 - isotopes (through indication of atomic mass)
 - a PyGTK front-end
