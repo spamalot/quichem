@@ -139,16 +139,13 @@ def parser_factory():
     # the value. E.g. 3'14'c -> 3^{14}C, '12''nh4'2s -> ^{12}(NH_3)_2S.
     # The proton value can be automatically provided based on the following
     # element, and can be overridden by manually specifying a value (e.g.
-    # '14;4'c -> ^{14}_4C ).
+    # '14;4'c -> ^{14}_4C ). These quotes can be distinguished from brackets,
+    # because brackets must always end in a number, but these quotes cannot
+    # end in a number.
 
-    # Common
     separator = ((equals | dash) + ~FollowedBy(semicolon)) | Literal('/')
-    # FIXME: rename to state
-    state_name = oneOf('s l g aq')
-    # FIXME rename/move following
-    state = Suppress(Optional(semicolon)) + Optional(state_name, DEFAULT_STATE)
-    # FIXME: rename/move following
-    follow_state = semicolon | (Optional(semicolon) + state_name) | separator | StringEnd()
+    state = Suppress(Optional(semicolon)) + oneOf('s l g aq')
+    state_lookahead = (state | separator | StringEnd())
 
     charge = Optional(number, DEFAULT_CHARGE_NUMBER) + (equals | dash)
     coefficient = number_factory()
@@ -161,15 +158,14 @@ def parser_factory():
     counter = (element | group) + Optional(number, DEFAULT_COUNT_NUMBER)
     compound_segment << OneOrMore(counter)
     compound << (counter + ZeroOrMore(compound_segment))
-    item = (Optional(coefficient, DEFAULT_COEFFICIENT) +
-            compound +
-            # FIXME: simplify following
-            Optional(Suppress(Optional(dot)) + charge + FollowedBy(follow_state), DEFAULT_CHARGE) +
-            state)
+    item = (Optional(coefficient, DEFAULT_COEFFICIENT) + compound +
+            Optional(Suppress(Optional(dot)) + charge +
+                     FollowedBy(state_lookahead), DEFAULT_CHARGE) +
+            Optional(state, DEFAULT_STATE))
 
     expression = item + ZeroOrMore(separator + item)
 
-    state_name.setParseAction(quichem.tokens.State).setName('state')
+    state.setParseAction(quichem.tokens.State).setName('state')
     charge.setParseAction(quichem.tokens.Charge).setName('charge')
     coefficient.setParseAction(
         quichem.tokens.Coefficient).setName('coefficient')

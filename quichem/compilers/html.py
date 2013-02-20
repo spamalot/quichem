@@ -29,7 +29,7 @@ class HtmlCompiler(DisplayCompiler):
 
     def handle_separator(self, separator):
         if separator.type_ == '=':
-            return '&nbsp;+&nbsp;'
+            return ' &nbsp;+&nbsp;'
         if separator.type_ == '-':
             return '&nbsp;&#x2192;&nbsp;'
         if separator.type_ == '/':

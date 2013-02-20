@@ -85,7 +85,7 @@ class PysideGui(generic.GenericGui):
         return source
 
     def set_html(self, html):
-        self.view.setText(html)
+        self.view.document().setHtml(html)
 
     def set_source(self, widget, source):
         widget.setPlainText(source)

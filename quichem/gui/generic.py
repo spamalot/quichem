@@ -17,7 +17,6 @@ from __future__ import unicode_literals
 
 import argparse
 import collections
-import sys
 
 from pyparsing import ParseException
 
@@ -36,6 +35,7 @@ COMPILERS = collections.OrderedDict(
     reStructuredText=quichem.compilers.rst.RstCompiler(),
 )
 
+
 class GenericGui(object):
 
     def __init__(self):
@@ -43,7 +43,7 @@ class GenericGui(object):
 
     def change_value(self, val):
         try:
-            ast = parser.parseString(val)
+            ast = parser.parseString(val, parseAll=True)
         except ParseException as e:
             self.set_html(str(e))
             for source in self.sources:
@@ -55,25 +55,23 @@ class GenericGui(object):
                 self.set_source(source, compiler.compile(ast))
 
     def run(self):
-        self.compilers = collections.OrderedDict((name, COMPILERS[name]) for name in parse_args().compilers)
+        self.compilers = collections.OrderedDict(
+            (name, COMPILERS[name]) for name in parse_args().compilers)
         self.sources = [self.make_source(name) for name in self.compilers]
 
     def make_source(self, name):
-        pass
+        raise NotImplementedError
 
     def set_html(self, html):
-        pass
+        raise NotImplementedError
 
     def set_source(self, widget, source):
-        pass
+        raise NotImplementedError
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--compilers',
-                        nargs='+',
-                        choices=COMPILERS.keys(),
-                        default=COMPILERS.keys(),
-                        dest='compilers',
+    parser.add_argument('-c', '--compilers', nargs='+', dest='compilers',
+                        choices=COMPILERS.keys(), default=COMPILERS.keys(),
                         help='which compilers to enable; default is all')
     return parser.parse_args()
