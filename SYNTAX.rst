@@ -184,7 +184,8 @@ Input      Output                     Notes
 ``li2s``   Li\ :sub:`2`\ S
 ``li2;s``  Li\ :sub:`2(s)`
 ``li=s``   Li\ :sup:`+`\ :sub:`(s)`
-``li=;s``  Li\ :sup:`+`\ :sub:`(s)`
+``li=;s``  Li\ :sup:`+`\ :sub:`(s) `
+``li;=s``  Li + S
 =========  =========================  =====================
 
 
