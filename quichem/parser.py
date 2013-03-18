@@ -143,7 +143,7 @@ def parser_factory():
     # because brackets must always end in a number, but these quotes cannot
     # end in a number.
 
-    separator = ((equals | dash) + ~FollowedBy(semicolon)) | Literal('/')
+    separator = Suppress(Optional(semicolon)) + (((equals | dash) + ~FollowedBy(semicolon)) | Literal('/'))
     state = Suppress(Optional(semicolon)) + oneOf('s l g aq')
     state_lookahead = (state | separator | StringEnd())
 
