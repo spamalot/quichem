@@ -54,11 +54,12 @@ Dependencies
 
 Binaries
 ++++++++
-A Windows binary for the ``PySide`` ``quichem`` front-end can be downloaded
-from  ``quichem``'s `SourceForge page`_.
+Windows binaries for the ``PySide`` ``quichem`` front-end can be downloaded
+from  ``quichem``'s `SourceForge page`_. The binaries are created with
+``cx_Freeze``, so Python does not have to be installed to run them.
 
-There is currently no pre-build binary for the ``wxPython`` front-end, nor an
-installer for the ``quichem`` Python library.
+There is currently no pre-build binary for the ``wxPython`` front-end, nor a
+``setup.py`` file for installing ``quichem`` as a Python package.
 
 
 Running from Source
@@ -103,12 +104,10 @@ Screenshots
 Roadmap
 -------
 
-Below are some features which will likely be implemented in ``quichem`` in the
-future.
+Below are some features which may be implemented in ``quichem`` in the future.
 
-- full wxPython clipboard support
-- Windows binaries for wxPython front-end
-- ``setup.py`` files for installing and manual building
+- full wxPython clipboard support and Windows binaries for wxPython front-end
+- ``setup.py`` files for installing ``quichem`` as a Python package
 - isotopes (through indication of atomic mass)
 - a PyGTK front-end
 - a Win32 GUI front-end
