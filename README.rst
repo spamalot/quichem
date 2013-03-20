@@ -4,9 +4,9 @@
 ``quichem``
 ===========
 
-``quichem`` is a utility written in pure Python allowing for fast input and
-parsing of chemical formulae and equations. Entering data does not require any
-modifier keys or keystrokes to be pressed.
+``quichem`` (pronounced *[kwi-kehm]*) is a utility written in pure Python
+allowing for fast input and parsing of chemical formulae and equations.
+Entering data does not require any modifier keys or keystrokes to be pressed.
 
 ``quichem`` is distributed under the GNU LGPL v3.0.
 
