@@ -70,6 +70,14 @@ TEST_CASES = {
     "li;=s": ('[Item[Coefficient[1], Compound[[Counter[Element[li], 1]]], '
               'Charge[0, ], State[]], Separator[=], Item[Coefficient[1], '
               'Compound[[Counter[Element[s], 1]]], Charge[0, ], State[]]]'),
+    'li=s2': ('[Item[Coefficient[1], Compound[[Counter[Element[li], 1]]], '
+              'Charge[0, ], State[]], Separator[=], Item[Coefficient[1], '
+              'Compound[[Counter[Element[s], 2]]], Charge[0, ], State[]]]'),
+    'h=l': ('[Item[Coefficient[1], Compound[[Counter[Element[h], 1]]], '
+            'Charge[1, =], State[l]]]'),
+    'h=li': ('[Item[Coefficient[1], Compound[[Counter[Element[h], 1]]], '
+             'Charge[0, ], State[]], Separator[=], Item[Coefficient[1], '
+             'Compound[[Counter[Element[li], 1]]], Charge[0, ], State[]]]'),
     "2h2o": ('[Item[Coefficient[2], Compound[[Counter[Element[h], 2], '
              'Counter[Element[o], 1]]], Charge[0, ], State[]]]'),
     "10he": ('[Item[Coefficient[10], Compound[[Counter[Element[he], 1]]], '

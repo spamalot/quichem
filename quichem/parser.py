@@ -145,7 +145,8 @@ def parser_factory():
 
     separator = (Suppress(Optional(semicolon)) +
                  (((equals | dash) + ~FollowedBy(semicolon)) | Literal('/')))
-    state = Suppress(Optional(semicolon)) + oneOf('s l g aq')
+    state = (Suppress(Optional(semicolon)) + oneOf('s l g aq') +
+             FollowedBy(separator | StringEnd()))
     state_lookahead = (state | separator | StringEnd())
 
     charge = Optional(number, DEFAULT_CHARGE_NUMBER) + (equals | dash)
