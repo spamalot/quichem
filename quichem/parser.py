@@ -27,14 +27,14 @@ from pyparsing import (FollowedBy, Forward, Literal, OneOrMore, Optional,
 import quichem.tokens
 
 
-ELEMENTS = '|'.join(sorted(
-    ('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V '
+ELEMENTS = '|'.join(sorted((
+    'H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V '
     'Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc '
     'Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu '
     'Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi '
     'Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr '
     'Rf Db Sg Bh Hs Mt Ds Rg Cn Uut Fl Uup Lv Uus Uuo'
-    ).lower().split(), key=len, reverse=True))
+).lower().split(), key=len, reverse=True))
 
 DEFAULT_COUNT_NUMBER = '1'
 DEFAULT_CHARGE_NUMBER = '1'
@@ -63,7 +63,7 @@ def element_factory(args):
     Parameters
     ----------
     args : array-like
-        Contains a mixture of `quichem.tokens.CompoundSegment`s and
+        Contains a mixture of `quichem.tokens.CompoundSegment`\ s and
         strings of chained element symbols. Strings will be split before
         being added to the list. This function splits by taking the
         longest element symbol first, meaning ambiguous cases can always
@@ -71,7 +71,7 @@ def element_factory(args):
 
     Returns
     -------
-    list of `quichem.tokens.CompoundSegment`s
+    list of `quichem.tokens.CompoundSegment`\ s
 
     """
     list_ = []
@@ -95,7 +95,7 @@ def counter_factory(args):
 
     Returns
     -------
-    list of `quichem.tokens.Counter`s
+    list of `quichem.tokens.Counter`\ s
 
     """
     list_ = []
@@ -143,7 +143,8 @@ def parser_factory():
     # because brackets must always end in a number, but these quotes cannot
     # end in a number.
 
-    separator = Suppress(Optional(semicolon)) + (((equals | dash) + ~FollowedBy(semicolon)) | Literal('/'))
+    separator = (Suppress(Optional(semicolon)) +
+                 (((equals | dash) + ~FollowedBy(semicolon)) | Literal('/')))
     state = Suppress(Optional(semicolon)) + oneOf('s l g aq')
     state_lookahead = (state | separator | StringEnd())
 

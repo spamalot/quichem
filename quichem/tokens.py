@@ -36,7 +36,7 @@ class Element(CompoundSegment):
     """
 
     def __init__(self, args):
-        self.symbol = args[0]
+        self.symbol, = args
 
     def __repr__(self):
         return 'Element[{}]'.format(self.symbol)
@@ -77,8 +77,7 @@ class Counter(object):
     """
 
     def __init__(self, args):
-        self.item = args[0]
-        self.count = args[1]
+        self.item, self.count = args
 
     def __repr__(self):
         return 'Counter[{}, {}]'.format(self.item, self.count)
@@ -118,7 +117,7 @@ class State(object):
     """
 
     def __init__(self, args):
-        self.state = args[0]
+        self.state, = args
 
     def __repr__(self):
         return 'State[{}]'.format(self.state)
@@ -136,7 +135,7 @@ class Coefficient(object):
     """
 
     def __init__(self, args):
-        self.value = args[0]
+        self.value, = args
 
     def __repr__(self):
         return 'Coefficient[{}]'.format(self.value)
@@ -157,8 +156,7 @@ class Charge(object):
     """
 
     def __init__(self, args):
-        self.value = args[0]
-        self.sign = args[1]
+        self.value, self.sign = args
 
     def __repr__(self):
         return 'Charge[{}, {}]'.format(self.value, self.sign)
@@ -178,10 +176,7 @@ class Item(object):
     """
 
     def __init__(self, args):
-        self.coefficient = args[0]
-        self.compound = args[1]
-        self.charge = args[2]
-        self.state = args[3]
+        self.coefficient, self.compound, self.charge, self.state = args
 
     def __repr__(self):
         return 'Item[{}, {}, {}, {}]'.format(self.coefficient, self.compound,
@@ -201,7 +196,7 @@ class Separator(object):
     """
 
     def __init__(self, args):
-        self.type_ = args[0]
+        self.type_, = args
 
     def __repr__(self):
         return 'Separator[{}]'.format(self.type_)
