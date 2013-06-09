@@ -29,10 +29,10 @@ import quichem.compilers.rst
 
 parser = quichem.parser.parser_factory()
 COMPILERS = collections.OrderedDict(
-    HTML=quichem.compilers.html.HtmlCompiler(),
-    plain=quichem.compilers.plain.PlainCompiler(),
-    LaTeX=quichem.compilers.latex.LatexCompiler(),
-    reStructuredText=quichem.compilers.rst.RstCompiler(),
+    ('HTML', quichem.compilers.html.HtmlCompiler()),
+    ('plain', quichem.compilers.plain.PlainCompiler()),
+    ('LaTeX', quichem.compilers.latex.LatexCompiler()),
+    ('reStructuredText', quichem.compilers.rst.RstCompiler()),
 )
 
 

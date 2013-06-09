@@ -38,9 +38,9 @@ ELEMENTS = '|'.join(sorted((
 
 DEFAULT_COUNT_NUMBER = '1'
 DEFAULT_CHARGE_NUMBER = '1'
-DEFAULT_COEFFICIENT = quichem.tokens.Coefficient(['1'])
-DEFAULT_CHARGE = quichem.tokens.Charge(['0', ''])
-DEFAULT_STATE = quichem.tokens.State([''])
+DEFAULT_COEFFICIENT = quichem.tokens.Coefficient(('1',))
+DEFAULT_CHARGE = quichem.tokens.Charge(('0', ''))
+DEFAULT_STATE = quichem.tokens.State(('',))
 
 
 # Token Factories
