@@ -38,12 +38,23 @@ COMPILERS = collections.OrderedDict(
 
 class GenericGui(object):
 
+    """Generic GUI for parsing and displaying output.
+
+    Automatically handles parsing input text and updating widgets with
+    parsed text.
+
+    """
+
     def __init__(self):
         self.compilers = self.sources = None
 
-    def change_value(self, val):
+    def change_value(self, value):
+        """Update all displays and source widgets with the given
+        unparsed text.
+
+        """
         try:
-            ast = parser.parseString(val, parseAll=True)
+            ast = parser.parseString(value, parseAll=True)
         except ParseException as e:
             self.set_html(str(e))
             for source in self.sources:
@@ -55,21 +66,38 @@ class GenericGui(object):
                 self.set_source(source, compiler.compile(ast))
 
     def run(self):
+        """Create the compiler objects and source widgets."""
         self.compilers = collections.OrderedDict(
             (name, COMPILERS[name]) for name in parse_args().compilers)
         self.sources = [self.make_source(name) for name in self.compilers]
 
     def make_source(self, name):
+        """Create and return a widget for displaying the source with the
+        given name.
+
+        Must be implemented in subclasses.
+
+        """
         raise NotImplementedError
 
     def set_html(self, html):
+        """Display the given HTML in the HTML view widget.
+
+        Must be implemented in subclasses.
+
+        """
         raise NotImplementedError
 
     def set_source(self, widget, source):
+        """Display the given source in the given widget."""
         raise NotImplementedError
 
 
 def parse_args():
+    """Allow users to pass in which parsers to load and display in the
+    GUI.
+
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--compilers', nargs='+', dest='compilers',
                         choices=COMPILERS.keys(), default=COMPILERS.keys(),

@@ -44,7 +44,7 @@ class WxpythonGui(generic.GenericGui):
         self.view.SetFonts('times new roman', '')
         self.view.SetMinSize((1, self.view.GetCharHeight() * 4))
         button = wx.Button(self.scroll_area, label='Copy Formatted Text')
-        button.Disable()  # Until we can add HTML data to clipboard
+        button.Disable()  # Until we can add HTML data to clipboard.
         button.Bind(wx.EVT_BUTTON, self.set_clipboard_html)
         self.layout.Add(edit, flag=wx.EXPAND | wx.ALL, border=8)
         self.layout.Add(self.view, 1, flag=wx.EXPAND | wx.ALL, border=8)
@@ -75,6 +75,10 @@ class WxpythonGui(generic.GenericGui):
         widget.SetValue(source)
 
     def set_clipboard_html(self, event):
+        """Place the HTML displayed in the HTML view widget into the
+        system clipboard.
+
+        """
         # FIXME: This only works on Windows ANSI builds of wxPython.
         # Ideally we want support on all wxPython builds on all OSs.
         data = wx.DataObjectSimple(wx.DataFormat(wx.DF_HTML))
@@ -84,6 +88,10 @@ class WxpythonGui(generic.GenericGui):
         wx.TheClipboard.Close()
 
     def set_clipboard(self, source, event):
+        """Place the text displayed in the given source widget into the
+        system clipboard.
+
+        """
         data = wx.TextDataObject()
         data.SetText(source.GetValue())
         wx.TheClipboard.Open()

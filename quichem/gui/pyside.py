@@ -91,11 +91,19 @@ class PysideGui(generic.GenericGui):
         widget.setPlainText(source)
 
     def set_clipboard_html(self):
+        """Place the HTML displayed in the HTML view widget into the
+        system clipboard.
+
+        """
         data = QMimeData()
         data.setHtml(self.view.document().toHtml())
         QApplication.clipboard().setMimeData(data)
 
     def set_clipboard(self, source):
+        """Place the text displayed in the given source widget into the
+        system clipboard.
+
+        """
         QApplication.clipboard().setText(source.toPlainText())
 
 

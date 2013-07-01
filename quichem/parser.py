@@ -45,12 +45,12 @@ DEFAULT_STATE = quichem.tokens.State(('',))
 
 # Token Factories
 def number_factory():
-    """Creates a new `pyparsing` integer."""
+    """Create a new `pyparsing` integer."""
     return Word(nums).setName('number')
 
 
 def alpha_factory():
-    """Creates a new `pyparsing` word matching lower case ascii letters.
+    """Create a new `pyparsing` word matching lower case ascii letters.
 
     """
     return Word(string.ascii_lowercase).setName('string')
