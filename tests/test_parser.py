@@ -38,6 +38,11 @@ TEST_CASES = {
         'Counter[Group[[Counter[Element[n], 1], Counter[Element[h], 4]]], 3], '
         'Counter[Group[[Counter[Element[p], 1], '
         'Counter[Element[o], 4]]], 2]]], Charge[0, ], State[]]]'),
+    "ge''nh4'2o'4": (
+        '[Item[Coefficient[1], Compound[[Counter[Element[ge], 1], '
+        'Counter[Group[[Counter[Group[[Counter[Element[n], 1], '
+        'Counter[Element[h], 4]]], 2], Counter[Element[o], 1]]], 4]]], '
+        'Charge[0, ], State[]]]'),
     "h=": ('[Item[Coefficient[1], Compound[[Counter[Element[h], 1]]], '
            'Charge[1, =], State[]]]'),
     "br-": ('[Item[Coefficient[1], Compound[[Counter[Element[br], 1]]], '
@@ -118,3 +123,7 @@ class TestStringList(unittest.TestCase):
         for case in TEST_CASES:
             self.assertEqual(TEST_CASES[case],
                              str(self.parser.parseString(case, parseAll=True)))
+
+
+if __name__ == '__main__':
+    unittest.main()

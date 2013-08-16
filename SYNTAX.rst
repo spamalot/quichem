@@ -30,8 +30,9 @@ The only symbols that the parser needs to recognize are:
     + lower-case letters & numbers
 
 This means that one does not have to press shift while typing text to be
-processed by the parser.
+processed by the parser [*]_.
 
+.. [*] When using a QWERTY keyboard.
 
 Elements
 --------
@@ -111,6 +112,7 @@ Input               Output
 ==================  =======================================================
 ``ge'oh'4``         Ge(OH)\ :sub:`4`
 ``b'nh4'3'p.o4'2``  B(NH\ :sub:`4`\ )\ :sub:`3`\ (PO\ :sub:`4`\ )\ :sub:`2`
+``ge''nh4'2o'4``    Ge((NH\ :sub:`4`\ )\ :sub:`2`\ O)\ :sub:`4`
 ==================  =======================================================
 
 
@@ -132,8 +134,8 @@ Input     Output
 ========  ============
 
 If the charge has a numeric value, a dot (``.``) must be used to distinguish
-it from a subscript_. A dot can be placed before a subscript even if there
-is no preceding subscript, in which case it will be ignored.
+it from a subscript_. A dot placed before a superscript without a numeric value
+is ignored.
 
 ==========  =======================
 Examples
