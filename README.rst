@@ -112,3 +112,5 @@ Below are some features which may be implemented in ``quichem`` in the future.
 - isotopes (through indication of atomic mass)
 - a PyGTK front-end
 - a Win32 GUI front-end
+- automatic parsing and compiling of ``quichem`` markup in supported text
+  documents

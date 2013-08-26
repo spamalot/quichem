@@ -18,6 +18,13 @@ The ``quichem`` parser does **not** handle:
     - isotopes
     - radioactive particles
 
+
+Recent Changes
+--------------
+- **[2013-08-26]** Invalid elements are no longer ignored. They are now syntax
+  errors.
+
+
 General Notes
 -------------
 The only symbols that the parser needs to recognize are:
@@ -34,21 +41,25 @@ processed by the parser [*]_.
 
 .. [*] When using a QWERTY keyboard.
 
+
 Elements
 --------
 Elements are expected by the parser to be lower case. If only one element
 is entered, its identity is unambiguous, so the parser can automatically
 capitalize the first letter when necessary.
 
-========  ======
+Invalid elements result in a syntax error.
+
+========  ===============================================
 Examples
-----------------
+---------------------------------------------------------
 Input     Output
-========  ======
+========  ===============================================
 ``o``     O
 ``pb``    Pb
 ``uuo``   Uuo
-========  ======
+``x``     *Unknown element (at char 0), (line:1, col:1)*
+========  ===============================================
 
 
 .. _subscript:
@@ -176,12 +187,11 @@ Additionally, solids require a semicolon after subscripts, otherwise the
 ``s`` would be interpreted as sulphur. Semicolons can be used in unambiguous
 cases, in which they will be ignored.
 
-=========  =========================  =====================
+=========  =========================
 Examples
------------------------------------------------------------
-Input      Output                     Notes
-=========  =========================  =====================
-``heg``    He                         *(extra "g" ignored)*
+------------------------------------
+Input      Output
+=========  =========================
 ``he;g``   He\ :sub:`(g)`
 ``li2s``   Li\ :sub:`2`\ S
 ``li2;s``  Li\ :sub:`2(s)`
@@ -189,7 +199,7 @@ Input      Output                     Notes
 ``li=;s``  Li\ :sup:`+`\ :sub:`(s)`
 ``li;=s``  Li + S
 ``li=s2``  Li + S\ :sub:`2`
-=========  =========================  =====================
+=========  =========================
 
 
 Coefficients

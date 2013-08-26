@@ -2,6 +2,8 @@ from __future__ import absolute_import, unicode_literals
 
 import unittest
 
+import pyparsing
+
 import quichem.parser
 
 
@@ -60,8 +62,6 @@ TEST_CASES = {
     "hp.o4aq": ('[Item[Coefficient[1], Compound[[Counter[Element[h], 1], '
                 'Counter[Element[p], 1], Counter[Element[o], 4]]], '
                 'Charge[0, ], State[aq]]]'),
-    "heg": ('[Item[Coefficient[1], Compound[[Counter[Element[he], 1]]], '
-            'Charge[0, ], State[]]]'),
     "he;g": ('[Item[Coefficient[1], Compound[[Counter[Element[he], 1]]], '
              'Charge[0, ], State[g]]]'),
     "li2s": ('[Item[Coefficient[1], Compound[[Counter[Element[li], 2], '
@@ -113,6 +113,8 @@ TEST_CASES = {
         'Charge[0, ], State[s]]]'),
 }
 
+ERROR_CAUSING_TEST_CASES = {'heg'}
+
 
 class TestStringList(unittest.TestCase):
 
@@ -123,6 +125,11 @@ class TestStringList(unittest.TestCase):
         for case in TEST_CASES:
             self.assertEqual(TEST_CASES[case],
                              str(self.parser.parseString(case, parseAll=True)))
+
+    def test_raises(self):
+        for case in ERROR_CAUSING_TEST_CASES:
+            with self.assertRaises(pyparsing.ParseException):
+                self.parser.parseString(case, parseAll=True)
 
 
 if __name__ == '__main__':

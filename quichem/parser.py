@@ -22,7 +22,8 @@ import re
 import string
 
 from pyparsing import (FollowedBy, Forward, Literal, OneOrMore, Optional,
-                       StringEnd, Suppress, Word, ZeroOrMore, nums, oneOf)
+                       StringEnd, Suppress, Word, ZeroOrMore, nums, oneOf,
+                       ParseException)
 
 import quichem.tokens
 
@@ -62,7 +63,7 @@ def element_factory(args):
 
     Parameters
     ----------
-    args : array-like
+    args : Iterable
         Contains a mixture of `quichem.tokens.CompoundSegment`\ s and
         strings of chained element symbols. Strings will be split before
         being added to the list. This function splits by taking the
@@ -74,14 +75,17 @@ def element_factory(args):
     list of `quichem.tokens.CompoundSegment`\ s
 
     """
-    list_ = []
+    compound_segments = []
     for item in args:
         if isinstance(item, quichem.tokens.CompoundSegment):
-            list_.append(item)
+            compound_segments.append(item)
         else:
-            list_.extend(quichem.tokens.Element([element])
-                         for element in re.findall(ELEMENTS, item))
-    return list_
+            element_strings = re.findall(ELEMENTS, item)
+            if item != ''.join(element_strings):
+                raise ParseException('Unknown element')
+            compound_segments.extend(quichem.tokens.Element([element])
+                                     for element in element_strings)
+    return compound_segments
 
 
 def counter_factory(args):
@@ -89,7 +93,7 @@ def counter_factory(args):
 
     Parameters
     ----------
-    args : array-like
+    args : Iterable
         Must be in the format [item_0, item_1, item_2, ..., item_n,
         count_n] (only the last item is a counter).
 
@@ -98,11 +102,13 @@ def counter_factory(args):
     list of `quichem.tokens.Counter`\ s
 
     """
-    list_ = []
+    counters = []
     for item in args[:-2]:
-        list_.append(quichem.tokens.Counter([item, '1']))
-    list_.append(quichem.tokens.Counter([args[-2], args[-1]]))
-    return list_
+        counters.append(quichem.tokens.Counter([item, '1']))
+    # PyParsing handles IndexErrors for us, so we use the following
+    # instead of args[-2:].
+    counters.append(quichem.tokens.Counter([args[-2], args[-1]]))
+    return counters
 
 
 # Syntax
@@ -131,6 +137,7 @@ def parser_factory():
     semicolon = Literal(';').setName('semicolon')
     dash = Literal('-').setName('dash')
     equals = Literal('=').setName('equals')
+    slash = Literal('/').setName('slash')
     number = number_factory()
     lbracket = (Literal("'") + ~FollowedBy(number)).setName('left bracket')
     rbracket = (Literal("'") + FollowedBy(number)).setName('right bracket')
@@ -143,16 +150,16 @@ def parser_factory():
     # because brackets must always end in a number, but these quotes cannot
     # end in a number.
 
-    separator = (Suppress(Optional(semicolon)) +
-                 (((equals | dash) + ~FollowedBy(semicolon)) | Literal('/')))
+    separator = (Suppress(Optional(semicolon)) + (equals | dash | slash) +
+                 ~FollowedBy(semicolon))
     state = (Suppress(Optional(semicolon)) + oneOf('s l g aq') +
              FollowedBy(separator | StringEnd()))
-    state_lookahead = (state | separator | StringEnd())
+    state_lookahead = state | separator | StringEnd()
 
     charge = Optional(number, DEFAULT_CHARGE_NUMBER) + (equals | dash)
     coefficient = number_factory()
     element_chain = alpha_factory()
-    element = element_chain + ZeroOrMore((Suppress(dot) + element_chain))
+    element = element_chain + ZeroOrMore(Suppress(dot) + element_chain)
 
     compound = Forward()
     compound_segment = Forward()
