@@ -28,83 +28,20 @@ from pyparsing import (FollowedBy, Forward, Literal, OneOrMore, Optional,
 import quichem.tokens
 
 
-ELEMENTS = '|'.join(sorted((
-    'H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V '
-    'Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc '
-    'Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu '
-    'Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi '
-    'Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr '
-    'Rf Db Sg Bh Hs Mt Ds Rg Cn Uut Fl Uup Lv Uus Uuo'
-).lower().split(), key=len, reverse=True))
+ELEMENTS = (
+    'uut uup uus uuo he li be ne na mg al si cl ar ca sc ti cr mn fe co ni cu '
+    'zn ga ge as se br kr rb sr zr nb mo tc ru rh pd ag cd in sn sb te xe cs '
+    'ba la ce pr nd pm sm eu gd tb dy ho er tm yb lu hf ta re os ir pt au hg '
+    'tl pb bi po at rn fr ra ac th pa np pu am cm bk cf es fm md no lr rf db '
+    'sg bh hs mt ds rg cn fl lv h b c n o f p s k v y i w u')
 
 DEFAULT_DENOMINATOR = '1'
 DEFAULT_COUNT_NUMBER = '1'
 DEFAULT_CHARGE_NUMBER = '1'
+DEFAULT_COEFFICIENT_NUMBER = '1'
 DEFAULT_COEFFICIENT = quichem.tokens.Coefficient(('1', '1'))
 DEFAULT_CHARGE = quichem.tokens.Charge(('0', ''))
 DEFAULT_STATE = quichem.tokens.State(('',))
-
-
-# Token Factories
-def alpha_factory():
-    """Create a new `pyparsing` word matching lower case ascii letters.
-
-    """
-    return Word(string.ascii_lowercase).setName('string')
-
-
-# Parse Actions
-def element_factory(args):
-    """Parse action to create a list of element symbols.
-
-    Parameters
-    ----------
-    args : Iterable
-        Contains a mixture of `quichem.tokens.CompoundSegment`\ s and
-        strings of chained element symbols. Strings will be split before
-        being added to the list. This function splits by taking the
-        longest element symbol first, meaning ambiguous cases can always
-        be clarified through manual splitting of symbols.
-
-    Returns
-    -------
-    list of `quichem.tokens.CompoundSegment`\ s
-
-    """
-    compound_segments = []
-    for item in args:
-        if isinstance(item, quichem.tokens.CompoundSegment):
-            compound_segments.append(item)
-        else:
-            element_strings = re.findall(ELEMENTS, item)
-            if item != ''.join(element_strings):
-                raise ParseException('Unknown element')
-            compound_segments.extend(quichem.tokens.Element([element])
-                                     for element in element_strings)
-    return compound_segments
-
-
-def counter_factory(args):
-    """Parse action to create a counter for every item in a list.
-
-    Parameters
-    ----------
-    args : Iterable
-        Must be in the format [item_0, item_1, item_2, ..., item_n,
-        count_n] (only the last item is a counter).
-
-    Returns
-    -------
-    list of `quichem.tokens.Counter`\ s
-
-    """
-    counters = []
-    for item in args[:-2]:
-        counters.append(quichem.tokens.Counter([item, '1']))
-    # PyParsing handles IndexErrors for us, so we use the following
-    # instead of args[-2:].
-    counters.append(quichem.tokens.Counter([args[-2], args[-1]]))
-    return counters
 
 
 # Syntax
@@ -136,7 +73,7 @@ def parser_factory():
     slash = Literal('/').setName('slash')
 
     number = Word(nums).setName('number')
-    float_ = Regex(r'\d+(\.\d*)?|\.\d+')#Combine(number ^ (dot + number))
+    decimal = Regex(r'\d+(\.\d*)?|\.\d+')
 
     lbracket = (Literal("'") + ~FollowedBy(number)).setName('left bracket')
     rbracket = (Literal("'") + FollowedBy(number)).setName('right bracket')
@@ -156,19 +93,21 @@ def parser_factory():
     state_lookahead = state | separator | StringEnd()
 
     charge = Optional(number, DEFAULT_CHARGE_NUMBER) + (equals | dash)
-    # Optional(NoMatch(), '1') allows us to insert text to match the
+    # Optional(NoMatch(), ...) allows us to insert text to match the
     # parse action's arguments. Ideally, there is a better solution than
     # this.
-    coefficient = ((float_ + Optional(NoMatch(), '1')) ^
+    coefficient = ((decimal +
+                   Optional(NoMatch(), DEFAULT_COEFFICIENT_NUMBER)) ^
                    (number + Optional(Suppress(slash) + number,
                     DEFAULT_DENOMINATOR)))
-    element_chain = alpha_factory()
-    element = element_chain + ZeroOrMore(Suppress(dot) + element_chain)
+    element = oneOf(ELEMENTS)
 
     compound = Forward()
     compound_segment = Forward()
     group = Suppress(lbracket) + compound_segment + Suppress(rbracket)
-    counter = (element | group) + Optional(number, DEFAULT_COUNT_NUMBER)
+    counter = ((element | group) + Optional(number |
+               (Suppress(dot) + Optional(NoMatch(), DEFAULT_COUNT_NUMBER)),
+               DEFAULT_COUNT_NUMBER))
     compound_segment << OneOrMore(counter)
     compound << (counter + ZeroOrMore(compound_segment))
     item = (Optional(coefficient, DEFAULT_COEFFICIENT) + compound +
@@ -182,10 +121,9 @@ def parser_factory():
     charge.setParseAction(quichem.tokens.Charge).setName('charge')
     coefficient.setParseAction(
         quichem.tokens.Coefficient).setName('coefficient')
-    element_chain.setParseAction(element_factory).setName('element')
-    element.setParseAction(element_factory)
+    element.setParseAction(quichem.tokens.Element).setName('element')
     group.setParseAction(quichem.tokens.Group).setName('group')
-    counter.setParseAction(counter_factory).setName('counter')
+    counter.setParseAction(quichem.tokens.Counter).setName('counter')
     compound.setParseAction(quichem.tokens.Compound).setName('compound')
     item.setParseAction(quichem.tokens.Item).setName('item')
     separator.setParseAction(quichem.tokens.Separator).setName('separator')

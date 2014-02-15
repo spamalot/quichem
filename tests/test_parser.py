@@ -70,6 +70,10 @@ TEST_CASES = {
                 'Charge[0, ], State[aq]]]'),
     "he;g": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[he], 1]]], '
              'Charge[0, ], State[g]]]'),
+    "heg": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[he], 1]]], '
+            'Charge[0, ], State[g]]]'),
+    "hg": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[hg], 1]]], '
+           'Charge[0, ], State[]]]'),
     "li2s": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[li], 2], '
              'Counter[Element[s], 1]]], Charge[0, ], State[]]]'),
     "li2;s": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[li], 2]]], '
@@ -127,7 +131,7 @@ TEST_CASES = {
         'Charge[0, ], State[s]]]'),
 }
 
-ERROR_CAUSING_TEST_CASES = {'heg'}
+ERROR_CAUSING_TEST_CASES = set()
 
 
 class TestStringList(unittest.TestCase):

@@ -45,7 +45,7 @@ Installation
 Dependencies
 ++++++++++++
 
-- Python 2.7 or Python >= 3.0
+- Python 2.7 or Python >= 3.2
 - ``pyparsing``
 - ``PySide`` (optional; for GUI front-end)
 - ``cx_Freeze`` (optional; for building ``PySide`` GUI front-end)
@@ -111,8 +111,6 @@ Below are some features which may be implemented in ``quichem`` in the future.
 - ``setup.py`` files for installing ``quichem`` as a Python package
 - isotopes (through indication of atomic mass)
 - export to the ``mhchem`` package format for LaTeX
-- automatically deduce states in unambiguous situations (e.g. make ``heg``
-  render as He\ :sub:`(g)`\ )
 - arrows other than "→"
 - plain text in equations, such as "energy"
 - subatomic particles

@@ -35,7 +35,7 @@ class LatexCompiler(DisplayCompiler):
             return r'\to '
         if separator.type_ == '/':
             return r'\bullet '
-        return DisplayCompiler.handle_separator(separator)
+        return DisplayCompiler.handle_separator(self, separator)
 
     def handle_coefficient(self, coefficient):
         if coefficient.denominator == '1':

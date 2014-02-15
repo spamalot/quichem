@@ -21,6 +21,8 @@ The ``quichem`` parser does **not** handle:
 
 Recent Changes
 --------------
+- **[2014-02-15]** States only need semicolons in ambiguous situations (e.g.
+  ``heg`` is now equivalent to ``he;g``, and will render as He\ :sub:`(g)`\ )
 - **[2014-02-15]** Support for fractional and decimal coefficients.
 - **[2013-08-26]** Invalid elements are no longer ignored. They are now syntax
   errors.
@@ -182,11 +184,10 @@ Input        Output
 ``hp.o4aq``  HPO\ :sub:`4(aq)`
 ===========  =================
 
-If the compound does not end with a charge or subscript, a semicolon (``;``)
-must be placed before the state's abbreviation to avoid ambiguity.
-Additionally, solids require a semicolon after subscripts, otherwise the
-``s`` would be interpreted as sulphur. Semicolons can be used in unambiguous
-cases, in which they will be ignored.
+If the state could be misinterpreted as an element (e.g. ``hg`` could be
+interpreted as mercury of gaseous hydrogen), a semicolon (``;``) must be
+placed before the state to avoid ambiguity. Semicolons can be used in
+unambiguous cases, in which case they will be ignored.
 
 =========  =========================
 Examples
@@ -194,6 +195,9 @@ Examples
 Input      Output
 =========  =========================
 ``he;g``   He\ :sub:`(g)`
+``heg``    He\ :sub:`(g)`
+``h;g``    H\ :sub:`(g)`
+``hg``     Hg
 ``li2s``   Li\ :sub:`2`\ S
 ``li2;s``  Li\ :sub:`2(s)`
 ``li=s``   Li\ :sup:`+`\ :sub:`(s)`
