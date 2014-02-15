@@ -36,6 +36,14 @@ class HtmlCompiler(DisplayCompiler):
             return '&nbsp;&#x2022;&nbsp;'
         raise Exception('Separator not supported.')
 
+    def handle_coefficient(self, coefficient):
+        if coefficient.denominator == '1':
+            if coefficient.numerator == '1':
+                return ''
+            return '{}&#x2006;'.format(coefficient.numerator)
+        return '<sup>{}</sup>&frasl;<sub>{}</sub>&#x2006;'.format(
+            coefficient.numerator, coefficient.denominator)
+
     def handle_charge(self, charge):
         charge = DisplayCompiler.handle_charge(self, charge)
         if charge:

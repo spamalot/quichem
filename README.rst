@@ -110,6 +110,12 @@ Below are some features which may be implemented in ``quichem`` in the future.
 - Windows binaries for wxPython front-end
 - ``setup.py`` files for installing ``quichem`` as a Python package
 - isotopes (through indication of atomic mass)
+- export to the ``mhchem`` package format for LaTeX
+- automatically deduce states in unambiguous situations (e.g. make ``heg``
+  render as He\ :sub:`(g)`\ )
+- arrows other than "→"
+- plain text in equations, such as "energy"
+- subatomic particles
 - a PyGTK front-end
 - a Win32 GUI front-end
 - automatic parsing and compiling of ``quichem`` markup in supported text

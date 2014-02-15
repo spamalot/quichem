@@ -23,7 +23,7 @@ import string
 
 from pyparsing import (FollowedBy, Forward, Literal, OneOrMore, Optional,
                        StringEnd, Suppress, Word, ZeroOrMore, nums, oneOf,
-                       ParseException)
+                       ParseException, Regex, NoMatch)
 
 import quichem.tokens
 
@@ -37,19 +37,15 @@ ELEMENTS = '|'.join(sorted((
     'Rf Db Sg Bh Hs Mt Ds Rg Cn Uut Fl Uup Lv Uus Uuo'
 ).lower().split(), key=len, reverse=True))
 
+DEFAULT_DENOMINATOR = '1'
 DEFAULT_COUNT_NUMBER = '1'
 DEFAULT_CHARGE_NUMBER = '1'
-DEFAULT_COEFFICIENT = quichem.tokens.Coefficient(('1',))
+DEFAULT_COEFFICIENT = quichem.tokens.Coefficient(('1', '1'))
 DEFAULT_CHARGE = quichem.tokens.Charge(('0', ''))
 DEFAULT_STATE = quichem.tokens.State(('',))
 
 
 # Token Factories
-def number_factory():
-    """Create a new `pyparsing` integer."""
-    return Word(nums).setName('number')
-
-
 def alpha_factory():
     """Create a new `pyparsing` word matching lower case ascii letters.
 
@@ -138,7 +134,10 @@ def parser_factory():
     dash = Literal('-').setName('dash')
     equals = Literal('=').setName('equals')
     slash = Literal('/').setName('slash')
-    number = number_factory()
+
+    number = Word(nums).setName('number')
+    float_ = Regex(r'\d+(\.\d*)?|\.\d+')#Combine(number ^ (dot + number))
+
     lbracket = (Literal("'") + ~FollowedBy(number)).setName('left bracket')
     rbracket = (Literal("'") + FollowedBy(number)).setName('right bracket')
 
@@ -157,7 +156,12 @@ def parser_factory():
     state_lookahead = state | separator | StringEnd()
 
     charge = Optional(number, DEFAULT_CHARGE_NUMBER) + (equals | dash)
-    coefficient = number_factory()
+    # Optional(NoMatch(), '1') allows us to insert text to match the
+    # parse action's arguments. Ideally, there is a better solution than
+    # this.
+    coefficient = ((float_ + Optional(NoMatch(), '1')) ^
+                   (number + Optional(Suppress(slash) + number,
+                    DEFAULT_DENOMINATOR)))
     element_chain = alpha_factory()
     element = element_chain + ZeroOrMore(Suppress(dot) + element_chain)
 

@@ -24,34 +24,45 @@ from quichem.compilers.display import DisplayCompiler
 class LatexCompiler(DisplayCompiler):
 
     def compile(self, ast):
+        # Merge adjacent subscripts and superscripts.
         return re.sub(
             r'(_|\^){([^{}]+?)}(?:{})?\1{([^{}]+?)}',
             r'\1{\2\3}',
-            '$\mathrm{{{}}}$'.format(DisplayCompiler.compile(self, ast)))
+            '${}$'.format(DisplayCompiler.compile(self, ast)))
 
     def handle_separator(self, separator):
-        if separator.type_ == '=':
-            return '+'
         if separator.type_ == '-':
             return r'\to '
         if separator.type_ == '/':
             return r'\bullet '
-        raise Exception('Separator not supported.')
+        return DisplayCompiler.handle_separator(separator)
+
+    def handle_coefficient(self, coefficient):
+        if coefficient.denominator == '1':
+            if coefficient.numerator == '1':
+                return ''
+            return r'{}\,'.format(coefficient.numerator)
+        return r'\frac{{{}}}{{{}}}\,'.format(
+            coefficient.numerator, coefficient.denominator)
 
     def handle_charge(self, charge):
         charge = DisplayCompiler.handle_charge(self, charge)
         if charge:
-            return '^{{{}}}'.format(charge)
+            return r'^{{{}}}{{}}'.format(charge)
         return ''
 
     def handle_state(self, state):
-        state = DisplayCompiler.handle_state(self, state)
-        if state:
-            return '_{{{}}}'.format(state)
-        return ''
+        if state.state == 'l':
+            plain =  r'(\ell)'
+        else:
+            plain = DisplayCompiler.handle_state(self, state)
+        return r'_{{{}}}{{}}'.format(plain)
+
+    def handle_element(self, element):
+        return r'\mathrm{{{}}}'.format(element.symbol.title())
 
     def handle_counter(self, counter):
         counter = DisplayCompiler.handle_counter(self, counter)
         if counter:
-            return '_{{{}}}{{}}'.format(counter)
+            return r'_{{{}}}{{}}'.format(counter)
         return ''

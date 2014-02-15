@@ -130,15 +130,17 @@ class Coefficient(object):
     Parameters
     ----------
     args : iterable
-        The first item should be the numerical value of the coefficient.
+        The first item should be the numerator of the coefficient. The
+        second item should be the denominator, or '1' if the numerator
+        is a decimal.
 
     """
 
     def __init__(self, args):
-        self.value, = args
+        self.numerator, self.denominator = args
 
     def __repr__(self):
-        return 'Coefficient[{}]'.format(self.value)
+        return 'Coefficient[{}, {}]'.format(self.numerator, self.denominator)
 
 
 class Charge(object):

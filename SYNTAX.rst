@@ -21,6 +21,7 @@ The ``quichem`` parser does **not** handle:
 
 Recent Changes
 --------------
+- **[2014-02-15]** Support for fractional and decimal coefficients.
 - **[2013-08-26]** Invalid elements are no longer ignored. They are now syntax
   errors.
 
@@ -205,16 +206,20 @@ Input      Output
 Coefficients
 ------------
 Coefficients can be added to elements or compounds by including the value of
-the coefficient before the element or compound.
+the coefficient before the element or compound. Integer, fractional, and
+decimal coefficients are supported. Fractional coefficients can be entered in
+the format ``numerator/denominator``.
 
-========  ===============
+==========  ========================================
 Examples
--------------------------
-Input     Output
-========  ===============
-``2h2o``  2H\ :sub:`2`\ O
-``10he``  10He
-========  ===============
+----------------------------------------------------
+Input       Output
+==========  ========================================
+``2h2o``    2H\ :sub:`2`\ O
+``10he``    10He
+``1/2h2o``  \ :sup:`1`\ ⁄\ :sub:`2`\  H\ :sub:`2`\ O
+``0.5h2o``  0.5 H\ :sub:`2`\ O
+==========  ========================================
 
 
 Hydrates

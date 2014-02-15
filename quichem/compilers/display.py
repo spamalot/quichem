@@ -37,9 +37,12 @@ class DisplayCompiler(Compiler):
         raise Exception('Separator not supported.')
 
     def handle_coefficient(self, coefficient):
-        if coefficient.value == '1':
-            return ''
-        return coefficient.value
+        if coefficient.denominator == '1':
+            if coefficient.numerator == '1':
+                return ''
+            return '{}\u2006'.format(coefficient.numerator)
+        return '{}\u2044{}\u2006'.format(coefficient.numerator,
+                                         coefficient.denominator)
 
     def handle_charge(self, charge):
         if charge.value == '0':

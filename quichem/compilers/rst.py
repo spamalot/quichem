@@ -35,6 +35,14 @@ class RstCompiler(DisplayCompiler):
             return r'\ :sup:`{}`\ '.format(charge)
         return ''
 
+    def handle_coefficient(self, coefficient):
+        if coefficient.denominator == '1':
+            if coefficient.numerator == '1':
+                return ''
+            return r'{}\u2006'.format(coefficient.numerator)
+        return (r'\ :sup:`{}`\ ' '\u2044\ ' r':sub:`{}`\ ' '\u2006').format(
+            coefficient.numerator, coefficient.denominator)
+
     def handle_state(self, state):
         state = DisplayCompiler.handle_state(self, state)
         if state:
