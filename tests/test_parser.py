@@ -131,7 +131,7 @@ TEST_CASES = {
         'Charge[0, ], State[s]]]'),
 }
 
-ERROR_CAUSING_TEST_CASES = set()
+ERROR_CAUSING_TEST_CASES = {'x', 'naq'}
 
 
 class TestStringList(unittest.TestCase):

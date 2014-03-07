@@ -32,6 +32,7 @@ COMPILERS = collections.OrderedDict((
     ('HTML', quichem.compilers.html.HtmlCompiler()),
     ('plain', quichem.compilers.plain.PlainCompiler()),
     ('LaTeX', quichem.compilers.latex.LatexCompiler()),
+    ('LaTeX_mhchem_V3', quichem.compilers.latex.LatexMhchemV3Compiler()),
     ('reStructuredText', quichem.compilers.rst.RstCompiler()),
 ))
 

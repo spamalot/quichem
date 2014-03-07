@@ -33,10 +33,14 @@ General Notes
 The only symbols that the parser needs to recognize are:
 
     + ``=`` : either a `positive charge`_ or sum_ of two elements_/compounds_
-    + ``-`` : either a `negative charge`_ or an `arrow`_ in a `chemical equation`_
-    + ``/`` : dot used in hydrates_
+    + ``-`` : either a `negative charge`_ or an `arrow`_ in a
+      `chemical equation`_
+    + ``/`` : dot used in hydrates_ or a fraction slash for fractional
+      coefficients
     + ``'`` : represents either an open or close parenthesis_
-    + ``.``/``;`` : separators used in ambiguous cases
+    + ``.``: decimal point in decimal coefficients or a separator used in
+      ambiguous cases pertaining to elements, subscripts, and charges
+    + ``;`` : separator used in ambiguous cases pertaining to state
     + lower-case letters & numbers
 
 This means that one does not have to press shift while typing text to be
@@ -61,7 +65,7 @@ Input     Output
 ``o``     O
 ``pb``    Pb
 ``uuo``   Uuo
-``x``     *Unknown element (at char 0), (line:1, col:1)*
+``x``     *Expected element (at char 0), (line:1, col:1)*
 ========  ===============================================
 
 
@@ -115,7 +119,7 @@ Input        Output
 
 .. _parenthesis:
 
-Sometimes, elements require parentheses. Parenthesis are inserted into
+Sometimes, elements require parentheses. Parentheses are inserted into
 compounds by surrounding a segment of a compound with single-quotes (``'``).
 Parentheses can be nested if necessary.
 

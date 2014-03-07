@@ -18,9 +18,6 @@
 
 from __future__ import unicode_literals
 
-import re
-import string
-
 from pyparsing import (FollowedBy, Forward, Literal, OneOrMore, Optional,
                        StringEnd, Suppress, Word, ZeroOrMore, nums, oneOf,
                        ParseException, Regex, NoMatch)
@@ -44,16 +41,15 @@ DEFAULT_CHARGE = quichem.tokens.Charge(('0', ''))
 DEFAULT_STATE = quichem.tokens.State(('',))
 
 
-# Syntax
 def parser_factory():
     """Create the parser for the `quichem` library.
 
     The parser handles coefficients, compounds, compounds, ions,
     subscripts, and states. Below a several examples and what they
-    translate to in plain text.
+    translate to in plain (ASCII) text.
 
     ``3h2o;l`` -> 3H2O(l)
-    ``mg2=`` -> Mg2+
+    ``mg2=`` -> Mg 2+
     ``cmgali`` -> CmGaLi
     ``c.mgali`` -> CMgAlI
 
@@ -102,14 +98,12 @@ def parser_factory():
                     DEFAULT_DENOMINATOR)))
     element = oneOf(ELEMENTS)
 
-    compound = Forward()
     compound_segment = Forward()
     group = Suppress(lbracket) + compound_segment + Suppress(rbracket)
-    counter = ((element | group) + Optional(number |
-               (Suppress(dot) + Optional(NoMatch(), DEFAULT_COUNT_NUMBER)),
-               DEFAULT_COUNT_NUMBER))
+    counter = ((element | group) + Optional(number, DEFAULT_COUNT_NUMBER) +
+               Optional(Suppress(dot)))
     compound_segment << OneOrMore(counter)
-    compound << (counter + ZeroOrMore(compound_segment))
+    compound = compound_segment.copy()
     item = (Optional(coefficient, DEFAULT_COEFFICIENT) + compound +
             Optional(Suppress(Optional(dot)) + charge +
                      FollowedBy(state_lookahead), DEFAULT_CHARGE) +

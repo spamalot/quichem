@@ -19,12 +19,7 @@
 from __future__ import unicode_literals
 
 
-class CompoundSegment(object):
-
-    """Represents a segment of a chemical compound."""
-
-
-class Element(CompoundSegment):
+class Element(object):
 
     """Represents an individual element.
 
@@ -42,7 +37,7 @@ class Element(CompoundSegment):
         return 'Element[{}]'.format(self.symbol)
 
 
-class Group(CompoundSegment):
+class Group(object):
 
     """Represents a bracketed group of elements in a compound.
 
@@ -172,8 +167,8 @@ class Item(object):
     Parameters
     ----------
     args : iterable
-        The first four items should be the (coefficient, compound,
-        charge, and state) of the item.
+        The first four items should be the [Coefficient, Compound,
+        Charge, and State] tokens of the item.
 
     """
 

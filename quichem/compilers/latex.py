@@ -23,46 +23,57 @@ from quichem.compilers.display import DisplayCompiler
 
 class LatexCompiler(DisplayCompiler):
 
+    """LaTeX math mode compiler."""
+
+    def __init__(self):
+        DisplayCompiler.__init__(self)
+        self.fragments['separator'].literals['='] = '+'
+        self.fragments['separator'].literals['-'] = r'\to '
+        self.fragments['separator'].literals['/'] = r'\cdot '
+        self.fragments['coefficient'].wrap = (r'{}\,', r'\frac{{{}}}{{{}}}\,')
+        self.fragments['charge'].literals['='] = '+'
+        self.fragments['charge'].literals['-'] = '-'
+        for numeral in xrange(10):
+            self.fragments['charge'].literals[str(numeral)] = str(numeral)
+        self.fragments['charge'].wrap = ('^{{{}}}{{}}',)
+        self.fragments['state'].literals['l'] = r'\ell'
+        self.fragments['state'].wrap = ('_{{({})}}{{}}',)
+        self.fragments['element'].wrap = (r'\mathrm{{{}}}',)
+        for numeral in xrange(10):
+            self.fragments['counter'].literals[str(numeral)] = str(numeral)
+        self.fragments['counter'].wrap = ('_{{{}}}{{}}',)
+        self.fragments['open group'].literals["'"] = r'\left('
+        self.fragments['close group'].literals["'"] = r'\right)'
+
     def compile(self, ast):
         # Merge adjacent subscripts and superscripts.
-        return re.sub(
+        return '${}$'.format(re.sub(
             r'(_|\^){([^{}]+?)}(?:{})?\1{([^{}]+?)}',
             r'\1{\2\3}',
-            '${}$'.format(DisplayCompiler.compile(self, ast)))
+            DisplayCompiler.compile(self, ast)))
 
-    def handle_separator(self, separator):
-        if separator.type_ == '-':
-            return r'\to '
-        if separator.type_ == '/':
-            return r'\bullet '
-        return DisplayCompiler.handle_separator(self, separator)
 
-    def handle_coefficient(self, coefficient):
-        if coefficient.denominator == '1':
-            if coefficient.numerator == '1':
-                return ''
-            return r'{}\,'.format(coefficient.numerator)
-        return r'\frac{{{}}}{{{}}}\,'.format(
-            coefficient.numerator, coefficient.denominator)
+class LatexMhchemV3Compiler(DisplayCompiler):
 
-    def handle_charge(self, charge):
-        charge = DisplayCompiler.handle_charge(self, charge)
-        if charge:
-            return r'^{{{}}}{{}}'.format(charge)
-        return ''
+    """LaTeX compiler for ``mchem`` package."""
 
-    def handle_state(self, state):
-        if state.state == 'l':
-            plain =  r'(\ell)'
-        else:
-            plain = DisplayCompiler.handle_state(self, state)
-        return r'_{{{}}}{{}}'.format(plain)
+    def __init__(self):
+        DisplayCompiler.__init__(self)
+        self.fragments['separator'].literals['='] = ' + '
+        self.fragments['separator'].literals['-'] = ' -> '
+        self.fragments['separator'].literals['/'] = '*'
+        self.fragments['coefficient'].wrap = ('{}', '{}/{}')
+        self.fragments['charge'].literals['='] = '+'
+        self.fragments['charge'].literals['-'] = '-'
+        for numeral in xrange(10):
+            self.fragments['charge'].literals[str(numeral)] = str(numeral)
+        self.fragments['charge'].wrap = ('^{}',)
+        self.fragments['state'].literals['l'] = r'$\ell$'
+        self.fragments['state'].wrap = (' _{{({})}}',)
+        for numeral in xrange(10):
+            self.fragments['counter'].literals[str(numeral)] = str(numeral)
+        self.fragments['open group'].literals["'"] = '('
+        self.fragments['close group'].literals["'"] = ')'
 
-    def handle_element(self, element):
-        return r'\mathrm{{{}}}'.format(element.symbol.title())
-
-    def handle_counter(self, counter):
-        counter = DisplayCompiler.handle_counter(self, counter)
-        if counter:
-            return r'_{{{}}}{{}}'.format(counter)
-        return ''
+    def compile(self, ast):
+        return r'\ce{{{}}}'.format(DisplayCompiler.compile(self, ast))

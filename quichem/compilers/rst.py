@@ -23,34 +23,30 @@ from quichem.compilers.display import DisplayCompiler
 
 class RstCompiler(DisplayCompiler):
 
+    """reStructuredText compiler."""
+
+    def __init__(self):
+        DisplayCompiler.__init__(self)
+        self.fragments['separator'].literals['='] = ' + '
+        self.fragments['separator'].literals['-'] = ' \u27f6 '
+        self.fragments['separator'].literals['/'] = '\u2022'
+        self.fragments['coefficient'].wrap = (
+            r'{}\u2006', r'\ :sup:`{}`\ ' '\u2044\ ' r':sub:`{}`\ ' '\u2006')
+        self.fragments['charge'].literals['='] = '+'
+        self.fragments['charge'].literals['-'] = '\u207b'
+        for numeral in xrange(10):
+            self.fragments['charge'].literals[str(numeral)] = str(numeral)
+        self.fragments['charge'].wrap = (r'\ :sup:`{}`\ ',)
+        self.fragments['state'].literals['l'] = '\u2113'
+        self.fragments['state'].wrap = (r'\ :sub:`({})`\ ',)
+        for numeral in xrange(10):
+            self.fragments['counter'].literals[str(numeral)] = str(numeral)
+        self.fragments['counter'].wrap = (r'\ :sub:`{}`\ ',)
+        self.fragments['open group'].literals["'"] = '('
+        self.fragments['close group'].literals["'"] = ')'
+
     def compile(self, ast):
         return re.sub(r'(\\ :(?:sub|sup):`)([^`]+?)`\\ \1([^`]+?)`\\ ',
                       r'\1\2\3`\\ ',
                       DisplayCompiler.compile(self, ast)
                       ).replace(r'\ \ ', r'\ ').rstrip(r'\ ')
-
-    def handle_charge(self, charge):
-        charge = DisplayCompiler.handle_charge(self, charge)
-        if charge:
-            return r'\ :sup:`{}`\ '.format(charge)
-        return ''
-
-    def handle_coefficient(self, coefficient):
-        if coefficient.denominator == '1':
-            if coefficient.numerator == '1':
-                return ''
-            return r'{}\u2006'.format(coefficient.numerator)
-        return (r'\ :sup:`{}`\ ' '\u2044\ ' r':sub:`{}`\ ' '\u2006').format(
-            coefficient.numerator, coefficient.denominator)
-
-    def handle_state(self, state):
-        state = DisplayCompiler.handle_state(self, state)
-        if state:
-            return r'\ :sub:`{}`\ '.format(state)
-        return ''
-
-    def handle_counter(self, counter):
-        counter = DisplayCompiler.handle_counter(self, counter)
-        if counter:
-            return r'\ :sub:`{}`\ '.format(counter)
-        return ''

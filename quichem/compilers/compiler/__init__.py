@@ -19,6 +19,8 @@
 from __future__ import unicode_literals
 
 from quichem.tokens import Counter, Element, Group, Item, Separator
+import quichem.tokens
+from quichem.compilers.compiler import flat_tokens
 
 
 class Compiler(object):
@@ -38,13 +40,13 @@ class Compiler(object):
         self.result = []
         for token in ast:
             if isinstance(token, Separator):
-                self.result.append(self.handle_separator(token))
+                self.result.append(self.handle(token))
             elif isinstance(token, Item):
-                self.result.append(self.handle_coefficient(token.coefficient))
+                self.result.append(self.handle(token.coefficient))
                 for counter in token.compound.list_:
                     self.compile_counter(counter)
-                self.result.append(self.handle_charge(token.charge))
-                self.result.append(self.handle_state(token.state))
+                self.result.append(self.handle(token.charge))
+                self.result.append(self.handle(token.state))
             else:
                 raise Exception('Invalid token in AST.')
         return ''.join(self.result)
@@ -52,36 +54,27 @@ class Compiler(object):
     def compile_counter(self, counter):
         """Recursively compile a counter."""
         if isinstance(counter, Element):
-            self.result.append(self.handle_element(counter))
+            self.result.append(self.handle(counter))
         elif isinstance(counter, Group):
-            self.result.append(self.handle_open_group())
+            self.result.append(self.handle(tokened_strings['open group']()))
             for element in counter.list_:
                 self.compile_counter(element)
-            self.result.append(self.handle_close_group())
+            self.result.append(self.handle(tokened_strings['close group']()))
         elif isinstance(counter, Counter):
             self.compile_counter(counter.item)
-            self.result.append(self.handle_counter(counter))
+            self.result.append(self.handle(counter))
 
-    def handle_separator(self, separator):
+    def handle(self, token):
         raise NotImplementedError
 
-    def handle_coefficient(self, coefficient):
-        raise NotImplementedError
 
-    def handle_charge(self, charge):
-        raise NotImplementedError
-
-    def handle_state(self, state):
-        raise NotImplementedError
-
-    def handle_element(self, element):
-        raise NotImplementedError
-
-    def handle_counter(self, counter):
-        raise NotImplementedError
-
-    def handle_open_group(self):
-        raise NotImplementedError
-
-    def handle_close_group(self):
-        raise NotImplementedError
+tokened_strings = {
+    'separator': quichem.tokens.Separator,
+    'coefficient': quichem.tokens.Coefficient,
+    'charge': quichem.tokens.Charge,
+    'state': quichem.tokens.State,
+    'element': quichem.tokens.Element,
+    'counter': quichem.tokens.Counter,
+    'open group': flat_tokens.OpenGroup,
+    'close group': flat_tokens.CloseGroup,
+}
