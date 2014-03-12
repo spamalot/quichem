@@ -1,8 +1,23 @@
+# This file is part of quichem.
+#
+# quichem is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# quichem is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with quichem.  If not, see <http://www.gnu.org/licenses/>.
+
 from __future__ import absolute_import, unicode_literals
 
 import unittest
 
-import pyparsing
+import modgrammar
 
 import quichem.parser
 
@@ -35,6 +50,18 @@ TEST_CASES = {
     "c.mgali": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[c], 1], '
                 'Counter[Element[mg], 1], Counter[Element[al], 1], '
                 'Counter[Element[i], 1]]], Charge[0, ], State[]]]'),
+    "cmg.ali": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[c], 1], '
+                'Counter[Element[mg], 1], Counter[Element[al], 1], '
+                'Counter[Element[i], 1]]], Charge[0, ], State[]]]'),
+    "cnergy": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[c], 1], '
+               'Counter[Element[ne], 1], Counter[Element[rg], 1], '
+               'Counter[Element[y], 1]]], Charge[0, ], State[]]]'),
+    "clina": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[cl], 1], '
+              'Counter[Element[i], 1], Counter[Element[na], 1]]], '
+              'Charge[0, ], State[]]]'),
+    "c.lina": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[c], 1], '
+               'Counter[Element[li], 1], Counter[Element[na], 1]]], '
+               'Charge[0, ], State[]]]'),
     # Parentheses
     "ge'oh'4": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[ge], 1], '
                 'Counter[Group[[Counter[Element[o], 1], '
@@ -93,6 +120,10 @@ TEST_CASES = {
     "h=li": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
              'Charge[0, ], State[]], Separator[=], Item[Coefficient[1, 1], '
              'Compound[[Counter[Element[li], 1]]], Charge[0, ], State[]]]'),
+    "clin;a": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[cl], 1], '
+               'Counter[Element[in], 1]]], Charge[0, ], State[a]]]'),
+    "naq": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[n], 1]]], '
+            'Charge[0, ], State[aq]]]'),
     # Coefficients
     "2h2o": ('[Item[Coefficient[2, 1], Compound[[Counter[Element[h], 2], '
              'Counter[Element[o], 1]]], Charge[0, ], State[]]]'),
@@ -131,23 +162,25 @@ TEST_CASES = {
         'Charge[0, ], State[s]]]'),
 }
 
-ERROR_CAUSING_TEST_CASES = {'x', 'naq'}
+ERROR_CAUSING_TEST_CASES = {'x', "'c'"}
 
 
 class TestStringList(unittest.TestCase):
 
     def setUp(self):
-        self.parser = quichem.parser.parser_factory()
+        self.parser = quichem.parser.make_parser()
 
     def test_tokens(self):
         for case in TEST_CASES:
+            print('Testing tokens:', case)
             self.assertEqual(TEST_CASES[case],
-                             str(self.parser.parseString(case, parseAll=True)))
+                             str(quichem.parser.parse(case, self.parser)))
 
     def test_raises(self):
         for case in ERROR_CAUSING_TEST_CASES:
-            with self.assertRaises(pyparsing.ParseException):
-                self.parser.parseString(case, parseAll=True)
+            print('Testing errors:', case)
+            with self.assertRaises(modgrammar.ParseError):
+                quichem.parser.parse(case, self.parser)
 
 
 if __name__ == '__main__':

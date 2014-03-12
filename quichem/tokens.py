@@ -18,33 +18,39 @@
 
 from __future__ import unicode_literals
 
+from quichem.modgrammar_fixes import Token, default, string
 
-class Element(object):
+
+__all__ = ['Element', 'Group', 'Counter', 'Compound', 'State', 'Coefficient',
+           'Charge', 'Item', 'Separator']
+
+
+class Element(Token):
 
     """Represents an individual element.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        The first item should be an element symbol in small-caps.
+    symbol : string
+        An element symbol in lowercase letters.
 
     """
 
-    def __init__(self, args):
-        self.symbol, = args
+    def grammar_init(self):
+        self.symbol = string(self)
 
     def __repr__(self):
         return 'Element[{}]'.format(self.symbol)
 
 
-class Group(object):
+class Group(Token):
 
     """Represents a bracketed group of elements in a compound.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        Should contain `Counter`\ s storing other elements or groups.
+    list_ : list
+        Contains `Counter`\ s storing other elements or groups.
 
     See Also
     --------
@@ -52,40 +58,42 @@ class Group(object):
 
     """
 
-    def __init__(self, args):
-        self.list_ = args
+    def grammar_init(self):
+        self.list_ = self.get_all('compound_segment', 'counter')
 
     def __repr__(self):
-        return 'Group[{}]'.format(self.list_)
+        return 'Group[{!r}]'.format(self.list_)
 
 
-class Counter(object):
+class Counter(Token):
 
-    """Associates a count with an item.
+    """Associates a count (subscript) with an item.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        The first item should be an item to associate the counter with.
-        The second item should be the count associated with the item.
+    item : Element, Group
+        An item to associate the counter with.
+    count : string
+        The count associated with the item.
 
     """
 
-    def __init__(self, args):
-        self.item, self.count = args
+    def grammar_init(self):
+        self.item = self.get('element') or self.get('group')
+        self.count = default(string(self.get('number')), '1')
 
     def __repr__(self):
-        return 'Counter[{}, {}]'.format(self.item, self.count)
+        return 'Counter[{!r}, {}]'.format(self.item, self.count)
 
 
-class Compound(object):
+class Compound(Token):
 
     """Represents a chemical compound.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        Should contain `Counter`\ s storing elements or groups.
+    list_ : list
+        Contains `Counter`\ s storing elements or groups.
 
     See Also
     --------
@@ -93,107 +101,122 @@ class Compound(object):
 
     """
 
-    def __init__(self, args):
-        self.list_ = args
+    def grammar_init(self):
+        self.list_ = self.get_all('compound_segment', 'counter')
 
     def __repr__(self):
-        return 'Compound[{}]'.format(self.list_)
+        return 'Compound[{!r}]'.format(self.list_)
 
 
-class State(object):
+class State(Token):
 
-    """Represents a state of matter.
+    """Represents a state of aggregation.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        The first item should be a state of matter.
+    state : string
+        An abbreviated state of aggregation.
 
     """
 
-    def __init__(self, args):
-        self.state, = args
+    def grammar_init(self):
+        self.state = string(self.find('state_word'))
 
     def __repr__(self):
         return 'State[{}]'.format(self.state)
 
 
-class Coefficient(object):
+class Coefficient(Token):
 
     """Represents a coefficient of an item in a chemical equation.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        The first item should be the numerator of the coefficient. The
-        second item should be the denominator, or '1' if the numerator
+    numerator : string
+        The numerator of the coefficient.
+    denominator: string
+        The denominator of the coefficient, or '1' if the numerator
         is a decimal.
 
     """
 
-    def __init__(self, args):
-        self.numerator, self.denominator = args
+    def grammar_init(self):
+        self.numerator, self.denominator = string(self.find('decimal')), '1'
+        if self.numerator is None:
+            # FIXME: this won't work
+            self.numerator, self.denominator = (
+                list(map(string, self.find_all('number'))) + ['1'])[:2]
 
     def __repr__(self):
         return 'Coefficient[{}, {}]'.format(self.numerator, self.denominator)
 
 
-class Charge(object):
+class Charge(Token):
 
     """Represents the charge of an ion or charged compound.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        The first item should contain the numerical value of the charge
-        (0 means no charge). The second item should contain whether the
-        value of the charge should be applied positively or negatively.
+    value : string
+        The numerical value of the charge (0 means no charge).
+    sign : string
+        Either "=" (positive) or "-" (negative), representing whether
+        the value of the charge is applied positively or negatively.
         This value is ignored if the charge is 0.
 
     """
 
-    def __init__(self, args):
-        self.value, self.sign = args
+    def grammar_init(self):
+        self.value = default(string(self.find('number')), '1')
+        self.sign = string(self.find('sign'))
 
     def __repr__(self):
         return 'Charge[{}, {}]'.format(self.value, self.sign)
 
 
-class Item(object):
+class Item(Token):
 
     """Represents an compound in a chemical equation with a coefficient,
     charge, and state.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        The first four items should be the [Coefficient, Compound,
-        Charge, and State] tokens of the item.
+    coefficient : Coefficient
+    compound : Compound
+    charge : Charge
+    state : State
 
     """
 
-    def __init__(self, args):
-        self.coefficient, self.compound, self.charge, self.state = args
+    def grammar_init(self):
+        self.coefficient = default(
+            self.find('coefficient'),
+            Coefficient.from_attributes(numerator='1', denominator='1'))
+        self.compound = self.find('compound')
+        self.charge = default(self.find('charge'),
+                              Charge.from_attributes(value='0', sign=''))
+        self.state = default(self.find('state'),
+                             State.from_attributes(state=''))
 
     def __repr__(self):
-        return 'Item[{}, {}, {}, {}]'.format(self.coefficient, self.compound,
-                                             self.charge, self.state)
+        return 'Item[{!r}, {!r}, {!r}, {!r}]'.format(
+            self.coefficient, self.compound, self.charge, self.state)
 
 
-class Separator(object):
+class Separator(Token):
 
     """Represents a separator in a chemical equation, such as a plus
     sign or arrow.
 
-    Parameters
+    Attributes
     ----------
-    args : iterable
-        The first item should be the type of separator.
+    type_ : string
+        The type of separator (either "=", "-", or "/").
 
     """
 
-    def __init__(self, args):
-        self.type_, = args
+    def grammar_init(self):
+        self.type_ = string(self.find('separator'))
 
     def __repr__(self):
         return 'Separator[{}]'.format(self.type_)

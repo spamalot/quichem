@@ -43,6 +43,14 @@ class DisplayFragment(object):
         self.literals = {}
 
     def render(self, token):
+        """Render the given token using the literals and wrap defined
+        by the display fragment.
+
+        Returns
+        -------
+        The token rendered as a string.
+
+        """
         parts = self.compile_parts(token)
         if not parts:
             return ''
@@ -52,6 +60,17 @@ class DisplayFragment(object):
         return a
 
     def compile_parts(self, token):
+        """Determine the literals and the wrap string to use in order
+        to render the given token.
+
+        Must be implemented in subclasses.
+
+        Returns
+        -------
+        A tuple containing the parts of the string to be formatted
+        by the wrap string.
+
+        """
         raise NotImplementedError
 
 
@@ -73,6 +92,7 @@ class Separator(DisplayFragment):
             return (self.literals['-'],)
         if token.type_ == '/':
             return (self.literals['/'],)
+        # FIXME: make a custom exception
         raise Exception('Separator not supported.')
 
 

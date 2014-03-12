@@ -27,17 +27,17 @@ class HtmlCompiler(DisplayCompiler):
         DisplayCompiler.__init__(self)
         self.fragments['separator'].literals['='] = '&nbsp;+&nbsp;'
         self.fragments['separator'].literals['-'] = '&nbsp;&#x27f6;&nbsp;'
-        self.fragments['separator'].literals['/'] = '&#x2022;'
+        self.fragments['separator'].literals['/'] = '&#x00b7;'
         self.fragments['coefficient'].wrap = (
             '{}&#x2006;', '<sup>{}</sup>&frasl;<sub>{}</sub>&#x2006;')
         self.fragments['charge'].literals['='] = '+'
         self.fragments['charge'].literals['-'] = '&#x2212;'
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['charge'].literals[str(numeral)] = str(numeral)
         self.fragments['charge'].wrap = ('<sup>{}</sup>',)
         self.fragments['state'].literals['l'] = '&#x2113;'
         self.fragments['state'].wrap = ('<sub>({})</sub>',)
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['counter'].literals[str(numeral)] = str(numeral)
         self.fragments['counter'].wrap = ('<sub>{}</sub>',)
         self.fragments['open group'].literals["'"] = '('

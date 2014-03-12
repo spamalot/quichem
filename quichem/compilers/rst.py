@@ -29,17 +29,17 @@ class RstCompiler(DisplayCompiler):
         DisplayCompiler.__init__(self)
         self.fragments['separator'].literals['='] = ' + '
         self.fragments['separator'].literals['-'] = ' \u27f6 '
-        self.fragments['separator'].literals['/'] = '\u2022'
+        self.fragments['separator'].literals['/'] = '\xb7'
         self.fragments['coefficient'].wrap = (
             r'{}\u2006', r'\ :sup:`{}`\ ' '\u2044\ ' r':sub:`{}`\ ' '\u2006')
         self.fragments['charge'].literals['='] = '+'
         self.fragments['charge'].literals['-'] = '\u207b'
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['charge'].literals[str(numeral)] = str(numeral)
         self.fragments['charge'].wrap = (r'\ :sup:`{}`\ ',)
         self.fragments['state'].literals['l'] = '\u2113'
         self.fragments['state'].wrap = (r'\ :sub:`({})`\ ',)
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['counter'].literals[str(numeral)] = str(numeral)
         self.fragments['counter'].wrap = (r'\ :sub:`{}`\ ',)
         self.fragments['open group'].literals["'"] = '('

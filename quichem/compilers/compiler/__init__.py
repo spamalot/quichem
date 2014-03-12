@@ -25,18 +25,17 @@ from quichem.compilers.compiler import flat_tokens
 
 class Compiler(object):
 
-    """Abstract compiler for `quichem` ASTs.
-
-    `handle_*` methods handle the corresponding tokens in
-    `quichem.tokens`.
-
-    """
+    """Abstract compiler for `quichem` ASTs."""
 
     def __init__(self):
         self.result = None
 
     def compile(self, ast):
-        """Compiles a `quichem` AST into the desirable output type."""
+        """Compile a `quichem` AST into the desirable output type.
+
+        By default, return a list of compiled tokens.
+
+        """
         self.result = []
         for token in ast:
             if isinstance(token, Separator):
@@ -49,7 +48,7 @@ class Compiler(object):
                 self.result.append(self.handle(token.state))
             else:
                 raise Exception('Invalid token in AST.')
-        return ''.join(self.result)
+        return self.result
 
     def compile_counter(self, counter):
         """Recursively compile a counter."""
@@ -65,6 +64,11 @@ class Compiler(object):
             self.result.append(self.handle(counter))
 
     def handle(self, token):
+        """Return the desirable output for a given individual token.
+
+        Must be implemented in subclasses.
+
+        """
         raise NotImplementedError
 
 

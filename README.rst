@@ -17,15 +17,15 @@ Looking for the Windows application? Download it from ``quichem``'s
 Examples
 --------
 
-=========================  ===============================================================================
+=========================  ======================================================================================
 Input                      reStructuredText Output
-=========================  ===============================================================================
+=========================  ======================================================================================
 ``o2aq``                   O\ :sub:`2(aq)`
 ``li=``                    Li\ :sup:`+`
 ``'nh4'2s``                (NH\ :sub:`4`\ )\ :sub:`2`\ S
 ``b'nh4'3'p.o4'2``         B(NH\ :sub:`4`\ )\ :sub:`3`\ (PO\ :sub:`4`\ )\ :sub:`2`
-``2cl-aq=2ag=aq-2agcl;s``  2Cl\ :sup:`-`\ :sub:`(aq)`\  + 2Ag\ :sup:`+`\ :sub:`(aq)`\  → 2AgCl\ :sub:`(s)`
-=========================  ===============================================================================
+``2cl-aq=2ag=aq-2agcl;s``  2 Cl\ :sup:`⁻`\ :sub:`(aq)`\  + 2 Ag\ :sup:`+`\ :sub:`(aq)`\  ⟶ 2 AgCl\ :sub:`(s)`
+=========================  ======================================================================================
 
 For more examples and a detailed description, see `SYNTAX.rst <SYNTAX.rst>`_.
 
@@ -37,16 +37,24 @@ Current Output Format Support
 - reStructuredText
 - HTML
 - LaTeX
+- LaTeX for the ``mchem`` package
 
 
 Installation
------------
+------------
 
 Dependencies
 ++++++++++++
 
-- Python 2.7 or Python >= 3.2
-- ``pyparsing``
+.. sidebar:: Python 2.7 Support
+
+    All efforts have been taken to retain compatability with Python 2.7.
+    However, ``modgrammar-py2`` is at version 0.9.2, and therefore ``quichem``
+    will only regain support for Python 2.7 once ``modgrammar-py2`` has been
+    updated to match the ``modgrammar`` 0.10 API.
+
+- Python >= 3.2
+- ``modgrammar`` >= 0.10
 - ``PySide`` (optional; for GUI front-end)
 - ``cx_Freeze`` (optional; for building ``PySide`` GUI front-end)
 - ``wxPython`` (optional; for GUI front-end)
@@ -110,10 +118,10 @@ Below are some features which may be implemented in ``quichem`` in the future.
 - Windows binaries for wxPython front-end
 - ``setup.py`` files for installing ``quichem`` as a Python package
 - isotopes (through indication of atomic mass)
-- export to the ``mhchem`` package format for LaTeX
 - arrows other than "→"
 - plain text in equations, such as "energy"
 - subatomic particles
+- different notation standards (e.g. IUPAC, ACS, etc.)
 - a PyGTK front-end
 - a Win32 GUI front-end
 - automatic parsing and compiling of ``quichem`` markup in supported text

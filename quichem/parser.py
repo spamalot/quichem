@@ -13,17 +13,20 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with quichem.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Parsing utilities for `quichem`."""
-
+"""Parsing utilities for ``quichem``."""
 
 from __future__ import unicode_literals
 
-from pyparsing import (FollowedBy, Forward, Literal, OneOrMore, Optional,
-                       StringEnd, Suppress, Word, ZeroOrMore, nums, oneOf,
-                       ParseException, Regex, NoMatch)
+import modgrammar
+from modgrammar import (L, WORD, OPTIONAL, ZERO_OR_MORE, ONE_OR_MORE, OR,
+                        LIST_OF, GRAMMAR, NOT_FOLLOWED_BY)
+from modgrammar.extras import RE
 
-import quichem.tokens
+from quichem import tokens
+from quichem import modgrammar_fixes as fixes
 
+
+modgrammar.grammar_whitespace_mode = 'explicit'
 
 ELEMENTS = (
     'uut uup uus uuo he li be ne na mg al si cl ar ca sc ti cr mn fe co ni cu '
@@ -32,21 +35,16 @@ ELEMENTS = (
     'tl pb bi po at rn fr ra ac th pa np pu am cm bk cf es fm md no lr rf db '
     'sg bh hs mt ds rg cn fl lv h b c n o f p s k v y i w u')
 
-DEFAULT_DENOMINATOR = '1'
-DEFAULT_COUNT_NUMBER = '1'
-DEFAULT_CHARGE_NUMBER = '1'
-DEFAULT_COEFFICIENT_NUMBER = '1'
-DEFAULT_COEFFICIENT = quichem.tokens.Coefficient(('1', '1'))
-DEFAULT_CHARGE = quichem.tokens.Charge(('0', ''))
-DEFAULT_STATE = quichem.tokens.State(('',))
+# FIXME: Still missing "aq, inf".
+STATES = 'mon pol sln vit ads cd cr am aq lc s f l g n a'
 
 
-def parser_factory():
-    """Create the parser for the `quichem` library.
+def make_parser():
+    """Create a parser for the ``quichem`` syntax.
 
     The parser handles coefficients, compounds, compounds, ions,
     subscripts, and states. Below a several examples and what they
-    translate to in plain (ASCII) text.
+    translate to in plain text (ASCII).
 
     ``3h2o;l`` -> 3H2O(l)
     ``mg2=`` -> Mg 2+
@@ -61,18 +59,6 @@ def parser_factory():
     The `quichem` parser.
 
     """
-    # Basic
-    dot = Literal('.').setName('dot')
-    semicolon = Literal(';').setName('semicolon')
-    dash = Literal('-').setName('dash')
-    equals = Literal('=').setName('equals')
-    slash = Literal('/').setName('slash')
-
-    number = Word(nums).setName('number')
-    decimal = Regex(r'\d+(\.\d*)?|\.\d+')
-
-    lbracket = (Literal("'") + ~FollowedBy(number)).setName('left bracket')
-    rbracket = (Literal("'") + FollowedBy(number)).setName('right bracket')
 
     # Note: Support for isotopes can be added by requiring brackets around
     # the value. E.g. 3'14'c -> 3^{14}C, '12''nh4'2s -> ^{12}(NH_3)_2S.
@@ -82,44 +68,69 @@ def parser_factory():
     # because brackets must always end in a number, but these quotes cannot
     # end in a number.
 
-    separator = (Suppress(Optional(semicolon)) + (equals | dash | slash) +
-                 ~FollowedBy(semicolon))
-    state = (Suppress(Optional(semicolon)) + oneOf('s l g aq') +
-             FollowedBy(separator | StringEnd()))
-    state_lookahead = state | separator | StringEnd()
+    element_word = OR(*ELEMENTS.split())
+    dot = L('.')
+    semicolon = L(';')
+    dash = L('-', tags=('sign', 'separator'))
+    equals = L('=', tags=('sign', 'separator'))
+    slash = L('/', tags=('separator',))
+    state_word = GRAMMAR(
+        OR(*(L(state, tags=('state_word',)) for state in STATES.split())),
+        collapse=True, desc='state')
+    number = RE(r'\d+', tags=('number',))
+    decimal = RE(r'\d+\.\d*|\.\d+', tags=('decimal',))
+    parenthesis = L("'")
 
-    charge = Optional(number, DEFAULT_CHARGE_NUMBER) + (equals | dash)
-    # Optional(NoMatch(), ...) allows us to insert text to match the
-    # parse action's arguments. Ideally, there is a better solution than
-    # this.
-    coefficient = ((decimal +
-                   Optional(NoMatch(), DEFAULT_COEFFICIENT_NUMBER)) ^
-                   (number + Optional(Suppress(slash) + number,
-                    DEFAULT_DENOMINATOR)))
-    element = oneOf(ELEMENTS)
+    element = fixes.g([element_word], 'element', tokens.Element)
+    compound_segment_ref = fixes.ref(lambda: compound_segment)
+    group = fixes.g(
+        [parenthesis, compound_segment_ref, parenthesis, RE(r'(?=\d)')],
+        'group', tokens.Group)
+    counter = fixes.g(
+        [(element | group), OPTIONAL(number, collapse=True), OPTIONAL(dot)],
+        'counter', tokens.Counter)
+    compound_segment = fixes.g(
+        [ONE_OR_MORE(counter, collapse=True)], 'compound_segment',
+        desc='element')
+    compound = fixes.g([compound_segment], 'compound', tokens.Compound)
+    state = fixes.g([OPTIONAL(semicolon), state_word], 'state', tokens.State)
+    coefficient = fixes.g([decimal | (number, OPTIONAL(slash, number))],
+                          'coefficient', tokens.Coefficient)
+    charge = fixes.g([OPTIONAL(number), (equals | dash)],
+                     'charge', tokens.Charge)
+    # We need to have both a stateless item and a item with a state
+    # to ensure that a stateless item have higher precedence (e.g. to
+    # ensure that "clina" render as "ClINa" and not "ClIN(a)").
+    #
+    # The NOT_FOLLOWED_BY(charge) ensures we take the item with a
+    # state. This ensures that the charge is distinguished from a
+    # separator.
+    stateless_item = [OPTIONAL(coefficient), compound,
+                      OPTIONAL(OPTIONAL(dot), charge)]
+    item = fixes.g(
+        [GRAMMAR(stateless_item + [NOT_FOLLOWED_BY(charge)], collapse=True) |
+         (stateless_item + [OPTIONAL(state)])],
+        'item', tokens.Item)
+    # We have an optional semicolon here to allow for distinction
+    # between a sign + state and a separator + element (e.g.
+    # positively charged solid vs. plus sulphur).
+    separator = fixes.g([OPTIONAL(semicolon), (equals | dash | slash)],
+                        'separator', tokens.Separator)
 
-    compound_segment = Forward()
-    group = Suppress(lbracket) + compound_segment + Suppress(rbracket)
-    counter = ((element | group) + Optional(number, DEFAULT_COUNT_NUMBER) +
-               Optional(Suppress(dot)))
-    compound_segment << OneOrMore(counter)
-    compound = compound_segment.copy()
-    item = (Optional(coefficient, DEFAULT_COEFFICIENT) + compound +
-            Optional(Suppress(Optional(dot)) + charge +
-                     FollowedBy(state_lookahead), DEFAULT_CHARGE) +
-            Optional(state, DEFAULT_STATE))
+    class Grammar(modgrammar.Grammar):
+        grammar = LIST_OF(item, sep=separator, collapse=True)
 
-    expression = item + ZeroOrMore(separator + item)
+    Grammar.grammar_resolve_refs()
+    return Grammar.parser()
 
-    state.setParseAction(quichem.tokens.State).setName('state')
-    charge.setParseAction(quichem.tokens.Charge).setName('charge')
-    coefficient.setParseAction(
-        quichem.tokens.Coefficient).setName('coefficient')
-    element.setParseAction(quichem.tokens.Element).setName('element')
-    group.setParseAction(quichem.tokens.Group).setName('group')
-    counter.setParseAction(quichem.tokens.Counter).setName('counter')
-    compound.setParseAction(quichem.tokens.Compound).setName('compound')
-    item.setParseAction(quichem.tokens.Item).setName('item')
-    separator.setParseAction(quichem.tokens.Separator).setName('separator')
 
-    return expression
+def parse(string, parser):
+    """Parse a string using the given parser.
+
+    Returns
+    -------
+    A list of tokens storing the parsed data.
+
+    """
+    result = parser.parse_string(string)
+    return [] if result is None else list(result.elements)

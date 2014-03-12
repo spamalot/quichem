@@ -33,13 +33,13 @@ class LatexCompiler(DisplayCompiler):
         self.fragments['coefficient'].wrap = (r'{}\,', r'\frac{{{}}}{{{}}}\,')
         self.fragments['charge'].literals['='] = '+'
         self.fragments['charge'].literals['-'] = '-'
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['charge'].literals[str(numeral)] = str(numeral)
         self.fragments['charge'].wrap = ('^{{{}}}{{}}',)
         self.fragments['state'].literals['l'] = r'\ell'
         self.fragments['state'].wrap = ('_{{({})}}{{}}',)
         self.fragments['element'].wrap = (r'\mathrm{{{}}}',)
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['counter'].literals[str(numeral)] = str(numeral)
         self.fragments['counter'].wrap = ('_{{{}}}{{}}',)
         self.fragments['open group'].literals["'"] = r'\left('
@@ -65,12 +65,12 @@ class LatexMhchemV3Compiler(DisplayCompiler):
         self.fragments['coefficient'].wrap = ('{}', '{}/{}')
         self.fragments['charge'].literals['='] = '+'
         self.fragments['charge'].literals['-'] = '-'
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['charge'].literals[str(numeral)] = str(numeral)
         self.fragments['charge'].wrap = ('^{}',)
         self.fragments['state'].literals['l'] = r'$\ell$'
         self.fragments['state'].wrap = (' _{{({})}}',)
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['counter'].literals[str(numeral)] = str(numeral)
         self.fragments['open group'].literals["'"] = '('
         self.fragments['close group'].literals["'"] = ')'

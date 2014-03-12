@@ -13,7 +13,7 @@ The ``quichem`` parser handles:
     - hydrates_
     - `chemical equations and fragments`_
 
-The ``quichem`` parser does **not** handle:
+The ``quichem`` parser does **not** (yet) handle:
 
     - isotopes
     - radioactive particles
@@ -21,6 +21,9 @@ The ``quichem`` parser does **not** handle:
 
 Recent Changes
 --------------
+- **[2014-03-12]** Error messages are now significantly more helpful.
+- **[2014-03-12]** Groups of elements that needed backtracking to disambiguate
+  are now automatically handled by the change to ``modgrammar``.
 - **[2014-02-15]** States only need semicolons in ambiguous situations (e.g.
   ``heg`` is now equivalent to ``he;g``, and will render as He\ :sub:`(g)`\ )
 - **[2014-02-15]** Support for fractional and decimal coefficients.
@@ -36,12 +39,12 @@ The only symbols that the parser needs to recognize are:
     + ``-`` : either a `negative charge`_ or an `arrow`_ in a
       `chemical equation`_
     + ``/`` : dot used in hydrates_ or a fraction slash for fractional
-      coefficients
+      coefficients_
     + ``'`` : represents either an open or close parenthesis_
     + ``.``: decimal point in decimal coefficients or a separator used in
       ambiguous cases pertaining to elements, subscripts, and charges
     + ``;`` : separator used in ambiguous cases pertaining to state
-    + lower-case letters & numbers
+    + numbers & lower-case letters
 
 This means that one does not have to press shift while typing text to be
 processed by the parser [*]_.
@@ -65,7 +68,7 @@ Input     Output
 ``o``     O
 ``pb``    Pb
 ``uuo``   Uuo
-``x``     *Expected element (at char 0), (line:1, col:1)*
+``x``     *[line 1, column 1] Expected item: Found 'x'*
 ========  ===============================================
 
 
@@ -101,7 +104,7 @@ Input        Output
 ===========  ======================================
 
 Since element names are not capitalized, there are several ambiguous cases.
-To clarify ambiguous cases, put a dot (``.``) at the *first* ambiguous
+To clarify ambiguous cases, put a dot (``.``) at any ambiguous
 position in the compound.
 
 Some common ambiguous cases to remember are PO and HS. A dot must be used to
@@ -115,13 +118,18 @@ Input        Output
 ===========  ======
 ``cmgali``   CmGaLi
 ``c.mgali``  CMgAlI
+``cmg.ali``  CMgAlI
 ===========  ======
 
 .. _parenthesis:
 
-Sometimes, elements require parentheses. Parentheses are inserted into
+Sometimes elements require parentheses. Parentheses are inserted into
 compounds by surrounding a segment of a compound with single-quotes (``'``).
 Parentheses can be nested if necessary.
+
+``quichem`` relies on close parentheses ending with a number. If a close
+parenthesis without a subscript is needed, use 1 as the subscript and it will
+be ignored
 
 ==================  =======================================================
 Examples
@@ -131,6 +139,7 @@ Input               Output
 ``ge'oh'4``         Ge(OH)\ :sub:`4`
 ``b'nh4'3'p.o4'2``  B(NH\ :sub:`4`\ )\ :sub:`3`\ (PO\ :sub:`4`\ )\ :sub:`2`
 ``ge''nh4'2o'4``    Ge((NH\ :sub:`4`\ )\ :sub:`2`\ O)\ :sub:`4`
+``'cl2'1``          (Cl\ :sub:`2`\ )
 ==================  =======================================================
 
 
@@ -148,7 +157,7 @@ Examples
 Input     Output
 ========  ============
 ``h=``    H\ :sup:`+`
-``br-``   Br\ :sup:`-`
+``br-``   Br\ :sup:`⁻`
 ========  ============
 
 If the charge has a numeric value, a dot (``.``) must be used to distinguish
@@ -172,7 +181,9 @@ States of Matter
 States can be added to elements or compounds by including the abbreviation of
 the state after the element or compound.
 
-Valid states are:
+``quichem`` supports nearly all of the states of aggregation listed in
+*Quantities, Units and Symbols in Physical Chemistry* [IUPAC2011]_.
+Some common states are: 
 
     - ``aq`` : aqueous
     - ``g`` : gas
@@ -186,10 +197,11 @@ Input        Output
 ===========  =================
 ``h2g``      H\ :sub:`2(g)`
 ``hp.o4aq``  HPO\ :sub:`4(aq)`
+``naq``      N\ :sub:`(aq)`
 ===========  =================
 
 If the state could be misinterpreted as an element (e.g. ``hg`` could be
-interpreted as mercury of gaseous hydrogen), a semicolon (``;``) must be
+interpreted as mercury or as gaseous hydrogen), a semicolon (``;``) must be
 placed before the state to avoid ambiguity. Semicolons can be used in
 unambiguous cases, in which case they will be ignored.
 
@@ -223,8 +235,8 @@ Examples
 ----------------------------------------------------
 Input       Output
 ==========  ========================================
-``2h2o``    2H\ :sub:`2`\ O
-``10he``    10He
+``2h2o``    2 H\ :sub:`2`\ O
+``10he``    10 He
 ``1/2h2o``  \ :sup:`1`\ ⁄\ :sub:`2`\  H\ :sub:`2`\ O
 ``0.5h2o``  0.5 H\ :sub:`2`\ O
 ==========  ========================================
@@ -232,7 +244,7 @@ Input       Output
 
 Hydrates
 --------
-Slash (``/``) is converted into the hydrate dot ("•"), so hydrates can be
+Slash (``/``) is converted into the hydrate dot ("·"), so hydrates can be
 made.
 
 ==============  ===========================================
@@ -240,8 +252,8 @@ Examples
 -----------------------------------------------------------
 Input           Output
 ==============  ===========================================
-``cocl2/6h2o``  CoCl\ :sub:`2`\  • 6H\ :sub:`2`\ O
-``li3=/6h2o``   Li\ :sub:`3`\ :sup:`+`\  • 6H\ :sub:`2`\ O
+``cocl2/6h2o``  CoCl\ :sub:`2`·6 H\ :sub:`2`\ O
+``li3=/6h2o``   Li\ :sub:`3`\ :sup:`+`·6 H\ :sub:`2`\ O
 ==============  ===========================================
 
 
@@ -253,19 +265,28 @@ Chemical Equations and Fragments
 --------------------------------
 Elements and compounds can be added together to form fragments of or full
 chemical equations. Equals (``=``) is used to add elements together, while
-minus (``-``) creates an equation arrow ("→"). |plus_note|
+minus (``-``) creates an equation arrow ("⟶"). |plus_note|
 
-=========================  ===============================================================================
+=========================  ===================================================================================
 Examples
-----------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
 Input                      Output
-=========================  ===============================================================================
-``mgo=h2o-mg'oh'2``        MgO + H\ :sub:`2`\ O → Mg(OH)\ :sub:`2`
-``2cl-aq=2ag=aq-2agcl;s``  2Cl\ :sup:`-`\ :sub:`(aq)`\  + 2Ag\ :sup:`+`\ :sub:`(aq)`\  → 2AgCl\ :sub:`(s)`
-=========================  ===============================================================================
+=========================  ===================================================================================
+``mgo=h2o-mg'oh'2``        MgO + H\ :sub:`2`\ O ⟶ Mg(OH)\ :sub:`2`
+``2cl-aq=2ag=aq-2agcl;s``  2 Cl\ :sup:`⁻`\ :sub:`(aq)`\  + 2 Ag\ :sup:`+`\ :sub:`(aq)`\  ⟶ 2 AgCl\ :sub:`(s)`
+=========================  ===================================================================================
 
 .. |plus_note| replace::
 
     Note that plus (``+``) is typed as equals (``=``) because both are on the
     same key on most standard keyboards and equals does not require the shift
     key to be pressed.
+
+
+
+References
+----------
+
+.. [IUPAC2011] *Quantities, Units and Symbols in Physical Chemistry* (Green Book)
+
+    http://www.iupac.org/home/projects/project-db/project-details.html?tx_wfqbe_pi1[project_nr]=110-2-81

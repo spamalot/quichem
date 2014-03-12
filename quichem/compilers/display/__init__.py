@@ -22,7 +22,18 @@ from quichem.compilers.display import fragments
 
 class DisplayCompiler(Compiler):
 
-    """Generic compiler for rendering to displayable text formats."""
+    """Generic compiler for rendering to displayable text formats.
+
+    Attributes
+    ----------
+    fragments : dict
+        Maps between token names and display fragments.
+    token_fragments : dict
+        Maps between token class objects and display fragments. The
+        display fragment objects are the same objects as those stored
+        in ``fragments``.
+
+    """
 
     def __init__(self):
         Compiler.__init__(self)
@@ -38,5 +49,12 @@ class DisplayCompiler(Compiler):
         self.token_fragments = {tokened_strings[string]: fragment for
                                 string, fragment in self.fragments.items()}
 
+    def compile(self, ast):
+        """Compile a `quichem` AST into a string of the compiled
+        tokens.
+
+        """
+        return ''.join(Compiler.compile(self, ast))
+
     def handle(self, token):
-        return self.token_fragments[token.__class__].render(token)
+        return self.token_fragments[next(x for x in self.token_fragments if isinstance(token, x))].render(token)

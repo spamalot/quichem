@@ -28,17 +28,17 @@ class PlainCompiler(DisplayCompiler):
         DisplayCompiler.__init__(self)
         self.fragments['separator'].literals['='] = ' + '
         self.fragments['separator'].literals['-'] = ' \u27f6 '
-        self.fragments['separator'].literals['/'] = '\u2022'
+        self.fragments['separator'].literals['/'] = '\xb7'
         self.fragments['coefficient'].wrap = ('{}\u2006', '{}\u2044{}\u2006')
         self.fragments['charge'].literals['='] = '\u207a'
         self.fragments['charge'].literals['-'] = '\u207b'
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['charge'].literals[str(numeral)] = (
                 '\u2070\xb9\xb2\xb3\u2074\u2075\u2076\u2077\u2078'
                 '\u2079'[numeral])
         self.fragments['state'].literals['l'] = '\u2113'
         self.fragments['state'].wrap = ('({})',)
-        for numeral in xrange(10):
+        for numeral in range(10):
             self.fragments['counter'].literals[str(numeral)] = (
                 '\u2080\u2081\u2082\u2083\u2084\u2085\u2086\u2087\u2088'
                 '\u2089'[numeral])

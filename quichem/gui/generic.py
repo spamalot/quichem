@@ -18,7 +18,7 @@ from __future__ import unicode_literals
 import argparse
 import collections
 
-from pyparsing import ParseException
+from modgrammar import ParseError
 
 import quichem.parser
 import quichem.compilers.html
@@ -27,7 +27,7 @@ import quichem.compilers.latex
 import quichem.compilers.rst
 
 
-parser = quichem.parser.parser_factory()
+parser = quichem.parser.make_parser()
 COMPILERS = collections.OrderedDict((
     ('HTML', quichem.compilers.html.HtmlCompiler()),
     ('plain', quichem.compilers.plain.PlainCompiler()),
@@ -55,8 +55,8 @@ class GenericGui(object):
 
         """
         try:
-            ast = parser.parseString(value, parseAll=True)
-        except ParseException as e:
+            ast = quichem.parser.parse(value, parser)
+        except ParseError as e:
             self.set_html(str(e))
             for source in self.sources:
                 self.set_source(source, '')
@@ -90,12 +90,16 @@ class GenericGui(object):
         raise NotImplementedError
 
     def set_source(self, widget, source):
-        """Display the given source in the given widget."""
+        """Display the given source in the given widget.
+
+        Must be implemented in subclasses.
+
+        """
         raise NotImplementedError
 
 
 def parse_args():
-    """Allow users to pass in which parsers to load and display in the
+    """Allow users to choose which parsers to load and display in the
     GUI.
 
     """
