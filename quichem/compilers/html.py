@@ -25,9 +25,12 @@ class HtmlCompiler(DisplayCompiler):
 
     def __init__(self):
         DisplayCompiler.__init__(self)
-        self.fragments['separator'].literals['='] = '&nbsp;+&nbsp;'
-        self.fragments['separator'].literals['-'] = '&nbsp;&#x27f6;&nbsp;'
+        self.fragments['separator'].literals['='] = '&nbsp;+ '
+        self.fragments['separator'].literals['-'] = '&nbsp;&#x27f6; '
         self.fragments['separator'].literals['/'] = '&#x00b7;'
+        self.fragments['separator'].literals['=,'] = '&nbsp;= '
+        self.fragments['separator'].literals['-/'] = '&nbsp;&#x21c4; '
+        self.fragments['separator'].literals['=/'] = '&nbsp;&#x21cc; '
         self.fragments['coefficient'].wrap = (
             '{}&#x2006;', '<sup>{}</sup>&frasl;<sub>{}</sub>&#x2006;')
         self.fragments['charge'].literals['='] = '+'

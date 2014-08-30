@@ -1,3 +1,16 @@
-*.pyc
 *~
+*.pyc
 __pycache__
+*.egg-info
+# Common temporary LaTeX files
+*.log
+*.aux
+*.synctex.gz
+# Temporary LaTeX files related to glossaries and indicies
+*.glo
+*.idx
+*.out
+*.gls
+*.ilg
+# quichem-specific temporary LaTeX files
+_quichem_temp.dat

@@ -1,0 +1,127 @@
+body {
+    font-family: 'Bitstream Charter', charter, 'Charis SIL', georgia, serif;
+    font-size: 14px;
+    line-height: 1.618;
+    background-color: white;
+    color: #2c2c2c;
+    padding: 30px;
+}
+
+a {
+    color: #4183C4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #2a7095;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 20px 0 10px;
+    padding: 0;
+}
+
+h1 {
+    font-size: 28px;
+    background: #eef4fa;
+    color: black;
+    padding-left: 51px;
+    margin-left: -51px;
+}
+
+h2 {
+    font-size: 24px;
+    border-bottom: 1px solid #cccccc;
+    color: black;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+h4 {
+    font-size: 16px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    color: #777777;
+    font-size: 14px;
+}
+
+.align-center {
+    text-align: center;
+}
+
+p, pre {
+    margin: 15px 0;
+}
+
+ul, ol, li {
+    margin: 8px 0;
+}
+
+div > ul, div > ol, div > li {
+    border-left: 1px solid #cccccc;
+    padding-left: 40px;
+}
+
+p.first, p.last {
+    margin: 0;
+}
+
+p.first {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.attention, .caution, .danger, .error, .hint,
+.important, .note, .tip, .warning, .admonition {
+    background-color: #f8f8f8;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    font-size: 13px;
+    overflow: auto;
+    padding: 6px 10px;
+}
+
+li p.first {
+    display: inline-block;
+}
+
+img {
+    max-width: 100%;
+}
+
+tt, pre {
+    background-color: #f8f8f8;
+}
+
+tt {
+    margin: 0 2px;
+    padding: 0 5px;
+    white-space: nowrap;
+    border: 1px solid #eaeaea;
+    border-radius: 3px;
+}
+
+pre {
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+}
+
+.eqn {
+    text-align: center;
+    font-size: 17px;
+}

@@ -30,10 +30,13 @@ class RstCompiler(DisplayCompiler):
         self.fragments['separator'].literals['='] = ' + '
         self.fragments['separator'].literals['-'] = ' \u27f6 '
         self.fragments['separator'].literals['/'] = '\xb7'
+        self.fragments['separator'].literals['=,'] = ' = '
+        self.fragments['separator'].literals['-/'] = ' \u21c4 '
+        self.fragments['separator'].literals['=/'] = ' \u21cc '
         self.fragments['coefficient'].wrap = (
-            r'{}\u2006', r'\ :sup:`{}`\ ' '\u2044\ ' r':sub:`{}`\ ' '\u2006')
+            '{}\u2006', r'\ :sup:`{}`\ ' '\u2044\ ' r':sub:`{}`\ ' '\u2006')
         self.fragments['charge'].literals['='] = '+'
-        self.fragments['charge'].literals['-'] = '\u207b'
+        self.fragments['charge'].literals['-'] = '\u2212'
         for numeral in range(10):
             self.fragments['charge'].literals[str(numeral)] = str(numeral)
         self.fragments['charge'].wrap = (r'\ :sup:`{}`\ ',)

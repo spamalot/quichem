@@ -29,6 +29,9 @@ class PlainCompiler(DisplayCompiler):
         self.fragments['separator'].literals['='] = ' + '
         self.fragments['separator'].literals['-'] = ' \u27f6 '
         self.fragments['separator'].literals['/'] = '\xb7'
+        self.fragments['separator'].literals['=,'] = ' = '
+        self.fragments['separator'].literals['-/'] = ' \u21c4 '
+        self.fragments['separator'].literals['=/'] = ' \u21cc '
         self.fragments['coefficient'].wrap = ('{}\u2006', '{}\u2044{}\u2006')
         self.fragments['charge'].literals['='] = '\u207a'
         self.fragments['charge'].literals['-'] = '\u207b'
@@ -46,4 +49,27 @@ class PlainCompiler(DisplayCompiler):
         self.fragments['close group'].literals["'"] = ')'
 
 
-# FIXME: ascii plain text compiler needed
+class PlainAsciiCompiler(DisplayCompiler):
+
+    """Plain text compiler without Unicode characters."""
+
+    def __init__(self):
+        DisplayCompiler.__init__(self)
+        self.fragments['separator'].literals['='] = ' + '
+        self.fragments['separator'].literals['-'] = ' -> '
+        self.fragments['separator'].literals['/'] = '.'
+        self.fragments['separator'].literals['=,'] = ' = '
+        self.fragments['separator'].literals['-/'] = ' <-> '
+        self.fragments['separator'].literals['=/'] = ' <=> '
+        self.fragments['coefficient'].wrap = ('{} ', '{}/{} ')
+        self.fragments['charge'].literals['='] = '+'
+        self.fragments['charge'].literals['-'] = '-'
+        for numeral in range(10):
+            self.fragments['charge'].literals[str(numeral)] = str(numeral)
+        self.fragments['charge'].wrap = (' {}',)
+        self.fragments['state'].literals['l'] = 'l'
+        self.fragments['state'].wrap = ('({})',)
+        for numeral in range(10):
+            self.fragments['counter'].literals[str(numeral)] = str(numeral)
+        self.fragments['open group'].literals["'"] = '('
+        self.fragments['close group'].literals["'"] = ')'

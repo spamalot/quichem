@@ -17,6 +17,10 @@ from __future__ import unicode_literals
 
 import argparse
 import collections
+import re
+import sys
+import os
+import cgi
 
 from modgrammar import ParseError
 
@@ -29,25 +33,53 @@ import quichem.compilers.rst
 
 parser = quichem.parser.make_parser()
 COMPILERS = collections.OrderedDict((
-    ('HTML', quichem.compilers.html.HtmlCompiler()),
     ('plain', quichem.compilers.plain.PlainCompiler()),
-    ('LaTeX', quichem.compilers.latex.LatexCompiler()),
     ('LaTeX_mhchem_V3', quichem.compilers.latex.LatexMhchemV3Compiler()),
+    ('HTML', quichem.compilers.html.HtmlCompiler()),
+    ('plain_ASCII', quichem.compilers.plain.PlainAsciiCompiler()),
+    ('LaTeX', quichem.compilers.latex.LatexCompiler()),
     ('reStructuredText', quichem.compilers.rst.RstCompiler()),
 ))
+MML_JS = 'MathJax.Hub.getAllJax("output")[0].root.toMathML("")'
 
 
 class GenericGui(object):
 
-    """Generic GUI for parsing and displaying output.
+    """GUI base for parsing and displaying output.
 
-    Automatically handles parsing input text and updating widgets with
-    parsed text.
+    Not tied to any particular GUI toolkit. Automatically handles
+    parsing input text and updating widgets with parsed text.
 
     """
 
     def __init__(self):
-        self.compilers = self.sources = None
+        self.compilers = {}
+        self.sources = []
+        self._ast = None
+
+    def _set_latex(self, latex):
+        """Set the LaTeX code for MathJax to display in the formatted
+        output view.
+
+        `latex` should not contain the open or close delimiters.
+
+        """
+        # Chop out open & close delimiters; format for passing to
+        # JavaScript.
+        self.run_script('update("{}")'.format(
+            re.escape(re.sub(r'^\\\(|\\\)$', '', latex))))
+
+    @property
+    def html(self):
+        if self._ast is None:
+            return cgi.escape(str(e))
+        return COMPILERS['HTML'].compile(self._ast)
+
+    @property
+    def plain(self):
+        if self._ast is None:
+            return e
+        return COMPILERS['plain'].compile(self._ast)
 
     def change_value(self, value):
         """Update all displays and source widgets with the given
@@ -55,16 +87,16 @@ class GenericGui(object):
 
         """
         try:
-            ast = quichem.parser.parse(value, parser)
+            self._ast = quichem.parser.parse(value, parser)
         except ParseError as e:
-            self.set_html(str(e))
+            self._ast = None
+            self._set_latex(r'\text{{{}}}'.format(e))
             for source in self.sources:
-                self.set_source(source, '')
+                self.set_source(source, lambda: '')
         else:
-            html = COMPILERS['HTML'].compile(ast)
-            self.set_html(html)
+            self._set_latex(COMPILERS['LaTeX'].compile(self._ast))
             for compiler, source in zip(self.compilers.values(), self.sources):
-                self.set_source(source, compiler.compile(ast))
+                self.set_source(source, lambda: compiler.compile(self._ast))
 
     def run(self):
         """Create the compiler objects and source widgets."""
@@ -81,8 +113,9 @@ class GenericGui(object):
         """
         raise NotImplementedError
 
-    def set_html(self, html):
-        """Display the given HTML in the HTML view widget.
+    def run_script(self, js):
+        """Run the given JavaScript code using the JavaScript console
+        of the embedded web view.
 
         Must be implemented in subclasses.
 
@@ -96,6 +129,26 @@ class GenericGui(object):
 
         """
         raise NotImplementedError
+
+
+def word_equation_from_mathml(mathml):
+    # Replace empty boxes with zero-width spaces.
+    # Confuse Word into thinking this is an equation.
+    return ('<?xml version="1.0"?>\n' +
+            re.sub(r'(?<=<mrow class="MJX-TeXAtom-ORD">)\s*(?=</mrow>)',
+                   '<mo>&#x180e;</mo>', mathml))
+
+
+def data_file(filename):
+    # Taken from:
+    #     http://cx-freeze.readthedocs.org/en/latest/faq.html#using-data-files
+    if getattr(sys, 'frozen', False):
+        # The application is frozen
+        datadir = os.path.dirname(sys.executable)
+    else:
+        # The application is not frozen
+        datadir = os.getcwd()
+    return os.path.abspath(os.path.join(datadir, filename))
 
 
 def parse_args():

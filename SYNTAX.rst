@@ -21,6 +21,10 @@ The ``quichem`` parser does **not** (yet) handle:
 
 Recent Changes
 --------------
+- **[2014-03-26]** All equation arrows listed in the IUPAC Green book are now
+  supported (previously only the net forward reaction arrow was supported).
+- **[2014-03-12]** Most states of aggregation listed in the IUPAC Green Book
+  are now supported (previously only aq, s, g, and l were supported).
 - **[2014-03-12]** Error messages are now significantly more helpful.
 - **[2014-03-12]** Groups of elements that needed backtracking to disambiguate
   are now automatically handled by the change to ``modgrammar``.
@@ -44,6 +48,9 @@ The only symbols that the parser needs to recognize are:
     + ``.``: decimal point in decimal coefficients or a separator used in
       ambiguous cases pertaining to elements, subscripts, and charges
     + ``;`` : separator used in ambiguous cases pertaining to state
+    + ``,``: when before or after an "=", creates a stoichiometric arrow in
+      a chemical equation; in the future, will be used to indicate text to
+      go above and below reaction arrows
     + numbers & lower-case letters
 
 This means that one does not have to press shift while typing text to be
@@ -103,9 +110,11 @@ Input        Output
 ``lioh``     LiOH
 ===========  ======================================
 
-Since element names are not capitalized, there are several ambiguous cases.
-To clarify ambiguous cases, put a dot (``.``) at any ambiguous
-position in the compound.
+Since element names are not capitalized, there are several ambiguous cases
+when creating comounds. By default, ``quichem`` chooses the elements with
+the longest symbol. To clarify ambiguous cases, put a dot (``.``) at
+any ambiguous position in the compound such that a long element symbol is
+broken down into multiple shorter element symbols.
 
 Some common ambiguous cases to remember are PO and HS. A dot must be used to
 separate the elements in these cases, or else Po and Hs are received as
@@ -127,9 +136,9 @@ Sometimes elements require parentheses. Parentheses are inserted into
 compounds by surrounding a segment of a compound with single-quotes (``'``).
 Parentheses can be nested if necessary.
 
-``quichem`` relies on close parentheses ending with a number. If a close
-parenthesis without a subscript is needed, use 1 as the subscript and it will
-be ignored
+``quichem`` relies on close parentheses being followed by a subscript. If a
+close parenthesis without a subscript is needed, use 1 as the subscript and
+it will be ignored.
 
 ==================  =======================================================
 Examples
@@ -183,12 +192,12 @@ the state after the element or compound.
 
 ``quichem`` supports nearly all of the states of aggregation listed in
 *Quantities, Units and Symbols in Physical Chemistry* [IUPAC2011]_.
-Some common states are: 
+Some common states are:
 
-    - ``aq`` : aqueous
-    - ``g`` : gas
-    - ``l`` : liquid
-    - ``s`` : solid
+    - ``aq``: aqueous
+    - ``g``: gas
+    - ``l``: liquid
+    - ``s``: solid
 
 ===========  =================
 Examples
@@ -263,9 +272,9 @@ Input           Output
 
 Chemical Equations and Fragments
 --------------------------------
-Elements and compounds can be added together to form fragments of or full
-chemical equations. Equals (``=``) is used to add elements together, while
-minus (``-``) creates an equation arrow ("⟶"). |plus_note|
+Elements and compounds can be added together to form fragments of chemical
+equations or full chemical equations. Equals (``=``) is used to add elements
+together, while minus (``-``) creates an equation arrow ("⟶"). |plus_note|
 
 =========================  ===================================================================================
 Examples
@@ -276,12 +285,38 @@ Input                      Output
 ``2cl-aq=2ag=aq-2agcl;s``  2 Cl\ :sup:`⁻`\ :sub:`(aq)`\  + 2 Ag\ :sup:`+`\ :sub:`(aq)`\  ⟶ 2 AgCl\ :sub:`(s)`
 =========================  ===================================================================================
 
+``quichem`` supports all the types of reaction "arrows" listed in
+*Quantities, Units and Symbols in Physical Chemistry* [IUPAC2011]_:
+
+	- ``,=`` or ``=,``: "=" (stoichiometric equation)
+	- ``-``: "⟶" (net forward reaction)
+	- ``-/``: "⇄" (reaction in both directions)
+	- ``=/``: "⇌" (equilibrium)
+
+=============  ================================================
+Examples
+---------------------------------------------------------------
+Input          Output
+=============  ================================================
+h2=br2=,2hbr   H\ :sub:`2`\  + Br\ :sub:`2`\  = 2 HBr
+h2=br2=,2hbr   H\ :sub:`2`\  + Br\ :sub:`2`\  = 2 HBr
+h2=br2-2hbr    H\ :sub:`2`\  + Br\ :sub:`2`\  ⟶ 2 HBr
+h2=br2-/2hbr   H\ :sub:`2`\  + Br\ :sub:`2`\ :sup:`−`\ ·2 HBr
+h2=br2;-/2hbr  H\ :sub:`2`\  + Br\ :sub:`2`\  ⇄ 2 HBr
+h2=br2=/2hbr   H\ :sub:`2`\  + Br\ :sub:`2`\ :sup:`+`\ ·2 HBr
+h2=br2;=/2hbr  H\ :sub:`2`\  + Br\ :sub:`2`\  ⇌ 2 HBr
+=============  ================================================
+
+As can be seen in the above table, "-/" and "=/" often require semicolons
+beforehand to distinguish them from either a positive or negative charge
+followed by a hydrate dot.
+
+
 .. |plus_note| replace::
 
     Note that plus (``+``) is typed as equals (``=``) because both are on the
     same key on most standard keyboards and equals does not require the shift
     key to be pressed.
-
 
 
 References

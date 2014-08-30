@@ -27,9 +27,14 @@ class LatexCompiler(DisplayCompiler):
 
     def __init__(self):
         DisplayCompiler.__init__(self)
+        # We can use \underset or \overset{text}{arrow} to make text above
+        # or below separators without using packages other than AMS.
         self.fragments['separator'].literals['='] = '+'
-        self.fragments['separator'].literals['-'] = r'\to '
-        self.fragments['separator'].literals['/'] = r'\cdot '
+        self.fragments['separator'].literals['-'] = r'\longrightarrow'
+        self.fragments['separator'].literals['/'] = r'\cdot{}'
+        self.fragments['separator'].literals['=,'] = '='
+        self.fragments['separator'].literals['-/'] = r'\rightleftarrows'
+        self.fragments['separator'].literals['=/'] = r'\rightleftharpoons'
         self.fragments['coefficient'].wrap = (r'{}\,', r'\frac{{{}}}{{{}}}\,')
         self.fragments['charge'].literals['='] = '+'
         self.fragments['charge'].literals['-'] = '-'
@@ -37,7 +42,7 @@ class LatexCompiler(DisplayCompiler):
             self.fragments['charge'].literals[str(numeral)] = str(numeral)
         self.fragments['charge'].wrap = ('^{{{}}}{{}}',)
         self.fragments['state'].literals['l'] = r'\ell'
-        self.fragments['state'].wrap = ('_{{({})}}{{}}',)
+        self.fragments['state'].wrap = (r'_{{\mathrm{{({})}}}}{{}}',)
         self.fragments['element'].wrap = (r'\mathrm{{{}}}',)
         for numeral in range(10):
             self.fragments['counter'].literals[str(numeral)] = str(numeral)
@@ -45,12 +50,22 @@ class LatexCompiler(DisplayCompiler):
         self.fragments['open group'].literals["'"] = r'\left('
         self.fragments['close group'].literals["'"] = r'\right)'
 
+    def _replace(self, match):
+        """Take a regex match containing adjacent, identical LaTeX
+        commands and combine them into a single command.
+
+        """
+        command = match.group(1)
+        return ''.join(
+            [command, '{',
+             re.sub('\\' + command + r'\{(.*?)\}', r'\1', match.group(0)),
+             '}'])
+
     def compile(self, ast):
-        # Merge adjacent subscripts and superscripts.
-        return '${}$'.format(re.sub(
-            r'(_|\^){([^{}]+?)}(?:{})?\1{([^{}]+?)}',
-            r'\1{\2\3}',
-            DisplayCompiler.compile(self, ast)))
+        # Merge adjacent subscripts, superscripts and \mathrms.
+        return r'\({}\)'.format(re.sub(
+            r'(_|\^|\\mathrm)\{([^{}]+?)\}(?:\{\})?(?:\1\{([^{}]+?)\})+',
+            self._replace, DisplayCompiler.compile(self, ast)))
 
 
 class LatexMhchemV3Compiler(DisplayCompiler):
@@ -62,6 +77,9 @@ class LatexMhchemV3Compiler(DisplayCompiler):
         self.fragments['separator'].literals['='] = ' + '
         self.fragments['separator'].literals['-'] = ' -> '
         self.fragments['separator'].literals['/'] = '*'
+        self.fragments['separator'].literals['=,'] = ' = '
+        self.fragments['separator'].literals['-/'] = ' <--> '
+        self.fragments['separator'].literals['=/'] = ' <=> '
         self.fragments['coefficient'].wrap = ('{}', '{}/{}')
         self.fragments['charge'].literals['='] = '+'
         self.fragments['charge'].literals['-'] = '-'

@@ -124,6 +124,34 @@ TEST_CASES = {
                'Counter[Element[in], 1]]], Charge[0, ], State[a]]]'),
     "naq": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[n], 1]]], '
             'Charge[0, ], State[aq]]]'),
+    # Separators
+    "h=h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+            'Charge[0, ], State[]], Separator[=], Item[Coefficient[1, 1], '
+            'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
+    "h-h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+            'Charge[0, ], State[]], Separator[-], Item[Coefficient[1, 1], '
+            'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
+    "h/h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+            'Charge[0, ], State[]], Separator[/], Item[Coefficient[1, 1], '
+            'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
+    "h=/h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+             'Charge[1, =], State[]], Separator[/], Item[Coefficient[1, 1], '
+             'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
+    "h-/h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+             'Charge[1, -], State[]], Separator[/], Item[Coefficient[1, 1], '
+             'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
+    "h;=/h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+              'Charge[0, ], State[]], Separator[=/], Item[Coefficient[1, 1], '
+              'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
+    "h;-/h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+              'Charge[0, ], State[]], Separator[-/], Item[Coefficient[1, 1], '
+              'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
+    "h=,h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+             'Charge[0, ], State[]], Separator[=,], Item[Coefficient[1, 1], '
+             'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
+    "h,=h": ('[Item[Coefficient[1, 1], Compound[[Counter[Element[h], 1]]], '
+             'Charge[0, ], State[]], Separator[=,], Item[Coefficient[1, 1], '
+             'Compound[[Counter[Element[h], 1]]], Charge[0, ], State[]]]'),
     # Coefficients
     "2h2o": ('[Item[Coefficient[2, 1], Compound[[Counter[Element[h], 2], '
              'Counter[Element[o], 1]]], Charge[0, ], State[]]]'),

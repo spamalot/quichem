@@ -1,0 +1,189 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2014 by Spamalot
+% ---------------------------------------------------------------------------
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Spamalot.
+%
+% This work consists of the files quichem.dtx and quichem.ins
+% and the derived filebase quichem.sty.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{quichem.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{quichem}
+%<*package>
+  [2014/03/27 2014-03-27 Initial version]
+%</package>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage{lmodern}
+\usepackage{inconsolata}
+\usepackage{microtype}
+\usepackage[parfill]{parskip}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage[python=python]{quichem}  % Specify Python version here.
+\setstretch{1.37}
+\newcommand{\quichem}{\texttt{quichem}}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+  \DocInput{quichem.dtx}
+  \PrintChanges
+  \PrintIndex
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{25}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+%
+% \changes{2014-03-27}{2014/03/27}{Initial version}
+%
+% \DoNotIndex{\newcommand,\newenvironment}
+%
+% \providecommand*{\url}{\texttt}
+% \GetFileInfo{quichem.dtx}
+% \title{\sffamily The \texttt{quichem} package}
+% \author{\sffamily Spamalot}
+% \date{\sffamily\filedate}
+%
+% \maketitle
+%
+% \section{Introduction}
+%
+% \quichem{} (pronounced \textit{[kwi-kehm]}) is a utility written in pure
+% Python designed to take the pain out of typing chemical equations into the
+% computer. For example, typing in \texttt{h=aq=cl-aq} will create an output
+% of: \dqc[.]{h=aq=cl-aq} This \LaTeX{} package facilitates the use of
+% \quichem{} markup in \LaTeX{} documents. The \quichem{} Python package must
+% already be installed and on the \textsc{pythonpath} in order for this
+% package to operate. In addition, the \textsf{mhchem} package must be
+% installed, as \quichem{} uses it for typesetting.
+%
+% \section{Usage}
+%
+% This document describes how to use the \quichem{} package in \LaTeX{}
+% documents. For other %information about \quichem{} such as its syntax,
+% please see the documentation files at the
+% \href{http://github.com/spamalot/quichem}{\quichem{} GitHub page}.
+% This package makes use of |\write18|, which therefore must be enabled in
+% the \LaTeX{} compiler being used (e.g.~with |-shell-escape|).
+%
+% \subsection{Python-side Setup}
+%
+% Before using this package in \LaTeX{}, quichem must be installed with the
+% Python executable to be used by this package. Installation of the Python
+% package is performed with \meta{python} |setup.py install|. The installation
+% can be checked by ensuring that \meta{python} |-m quichem.tools.latex|
+% outputs ``Congratulations! Your quichem installation is set up with LaTeX
+% support.''
+%
+% \subsection{Including the Package}
+%
+% To include the \quichem{} package, add
+% |\includepackage| \oarg{python} |{quichem}| to the document header.
+% \meta{python} is an optional keyword argument specifying the path
+% to the Python executable. By default, \quichem{} tries to run
+% \texttt{"python"}.
+%
+% E.g., |\includepackage[python=/usr/bin/python3]{quichem}|.
+%
+% \subsection{Macros}
+%
+% \DescribeMacro{\qc}
+% Typesets the provided \quichem{} markup, e.g.,
+% |\qc{2cl-aq=2ag=aq=/2agcl;s}| renders as \qc{2cl-aq=2ag=aq=/2agcl;s}.
+% This marco creates a temporary file in the document directory named
+% \textsf{\_quichem\_temp.dat}, which can be safely deleted after
+% document compilation.
+%
+% \DescribeMacro{\dqc}
+% Has the same function as |\qc|, but centers the
+% output on its own line, e.g., |\dqc[.]{2cl-aq=2ag=aq=/2agcl;s}| renders
+% as: \dqc[.]{2cl-aq=2ag=aq=/2agcl;s}
+%
+% Takes an optional parameter containing \LaTeX{} code to place after the
+% \quichem{} output. Useful for grammatical elements such as periods or commas.
+
+%
+% \StopEventually{}
+%
+% \setstretch{1}
+% \section{Implementation}
+%
+% \iffalse
+%<*package>
+% \fi
+%
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{quichem}[2014/03/27 quichem]
+
+\RequirePackage{kvoptions}
+\RequirePackage[version=3]{mhchem}
+
+\DeclareStringOption[python]{python}[python]
+\ProcessKeyvalOptions*
+
+\newcommand{\@qc}[1]{\immediate\write18{
+  \quichem@python\space -m quichem.tools.latex "#1" > _quichem_temp.dat}
+  \leavevmode\unskip\input{_quichem_temp.dat}\unskip}
+%    \end{macrocode}
+%
+% \begin{macro}{\qc}
+%    \begin{macrocode}
+\newcommand{\qc}[1]{\@qc{#1}}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\dqc}
+%    \begin{macrocode}
+\newcommand{\dqc}[2][]{\begin{center}\@qc{#2}#1\end{center}}
+%    \end{macrocode}
+% \end{macro}
+
+%
+%    \begin{macrocode}
+\endinput
+%    \end{macrocode}
+
+%
+% \iffalse
+%</package>
+% \fi
+%
+% \Finale
+\endinput

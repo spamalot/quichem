@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<title>quichem-pyside User Guide</title>
+<style type="text/css">
+
+body {
+    font-family: 'Bitstream Charter', charter, 'Charis SIL', georgia, serif;
+    font-size: 14px;
+    line-height: 1.618;
+    background-color: white;
+    color: #2c2c2c;
+    padding: 30px;
+}
+
+a {
+    color: #4183C4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #2a7095;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 20px 0 10px;
+    padding: 0;
+}
+
+h1 {
+    font-size: 28px;
+    background: #eef4fa;
+    color: black;
+    padding-left: 51px;
+    margin-left: -51px;
+}
+
+h2 {
+    font-size: 24px;
+    border-bottom: 1px solid #cccccc;
+    color: black;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+h4 {
+    font-size: 16px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    color: #777777;
+    font-size: 14px;
+}
+
+.align-center {
+    text-align: center;
+}
+
+p, pre {
+    margin: 15px 0;
+}
+
+ul, ol, li {
+    margin: 8px 0;
+}
+
+div > ul, div > ol, div > li {
+    border-left: 1px solid #cccccc;
+    padding-left: 40px;
+}
+
+p.first, p.last {
+    margin: 0;
+}
+
+p.first {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.attention, .caution, .danger, .error, .hint,
+.important, .note, .tip, .warning, .admonition {
+    background-color: #f8f8f8;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    font-size: 13px;
+    overflow: auto;
+    padding: 6px 10px;
+}
+
+li p.first {
+    display: inline-block;
+}
+
+img {
+    max-width: 100%;
+}
+
+tt, pre {
+    background-color: #f8f8f8;
+}
+
+tt {
+    margin: 0 2px;
+    padding: 0 5px;
+    white-space: nowrap;
+    border: 1px solid #eaeaea;
+    border-radius: 3px;
+}
+
+pre {
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+}
+
+.eqn {
+    text-align: center;
+    font-size: 17px;
+}
+
+</style>
+</head>
+<body>
+<div class="document" id="quichem-pyside-user-guide">
+<h1 class="title"><tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> User Guide</h1>
+
+<p>Thanks for trying out <tt class="docutils literal"><span class="pre">quichem-pyside</span></tt>. I've written this user guide as an
+informal, technical-jargon-free place for chemists to get started using
+<tt class="docutils literal">quichem</tt> on Windows (and other operating systems too).</p>
+<p><tt class="docutils literal">quichem</tt> (pronounced <em>[kwi-kehm]</em>) is a utility written in pure Python
+designed to take the pain out of typing chemical equations into the computer.
+For example, typing in <tt class="docutils literal"><span class="pre">h=aq=cl-aq</span></tt> will create an output of:</p>
+<div class="eqn container">
+H<sup>+</sup><sub>(aq)</sub> + Cl<sup>−</sup><sub>(aq)</sub>.</div>
+<p><tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> is a graphical program which makes use of the <tt class="docutils literal">quichem</tt>
+utility.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">Several images in this document may depict previous versions of
+<tt class="docutils literal">quichem</tt>. However, the functionality demonstrated in these images
+is unchanged in up-to-date versions.</p>
+</div>
+<div class="contents topic" id="table-of-contents">
+<p class="topic-title first">Table of Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#installation-on-windows" id="id3">Installation on Windows</a></li>
+<li><a class="reference internal" href="#getting-started" id="id4">Getting Started</a><ul>
+<li><a class="reference internal" href="#example-1" id="id5">Example 1</a></li>
+<li><a class="reference internal" href="#example-2" id="id6">Example 2</a></li>
+<li><a class="reference internal" href="#conclusion" id="id7">Conclusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#syntax" id="id8">Syntax</a></li>
+<li><a class="reference internal" href="#output-formats" id="id9">Output Formats</a><ul>
+<li><a class="reference internal" href="#copy-as-image" id="id10">&quot;Copy as Image&quot;</a><ul>
+<li><a class="reference internal" href="#troubleshooting" id="id11">Troubleshooting</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#copy-as-ms-word-equation" id="id12">&quot;Copy as MS Word Equation&quot;</a><ul>
+<li><a class="reference internal" href="#id1" id="id13">Troubleshooting</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#copy-as-formatted-text" id="id14">&quot;Copy as Formatted Text&quot;</a></li>
+<li><a class="reference internal" href="#plain-text-plain" id="id15">Plain Text: <tt class="docutils literal">plain</tt></a><ul>
+<li><a class="reference internal" href="#id2" id="id16">Troubleshooting</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#plain-text-for-old-computers-plain-ascii" id="id17">Plain Text for Old Computers: <tt class="docutils literal">plain_ASCII</tt></a></li>
+<li><a class="reference internal" href="#web-page-format-html" id="id18">Web Page Format: <tt class="docutils literal">HTML</tt></a></li>
+<li><a class="reference internal" href="#typeset-documents-latex-and-latex-mhchem-v3" id="id19">Typeset Documents: <tt class="docutils literal">LaTeX</tt> and <tt class="docutils literal">LaTeX_mhchem_V3</tt></a></li>
+<li><a class="reference internal" href="#restructuredtext" id="id20"><tt class="docutils literal">reStructuredText</tt></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="installation-on-windows">
+<h1><a class="toc-backref" href="#id3">Installation on Windows</a></h1>
+<p>To get started with <tt class="docutils literal">quichem</tt> on Windows, head over to the <tt class="docutils literal">quichem</tt>
+<a class="reference external" href="http://sourceforge.net/projects/quichem">SourceForge web page</a> and download the latest version using the green
+download button. This will download a zip file on to your computer. Extract the
+zip file by right clicking on it and selecting &quot;Extract all...&quot;. In the
+extracted folder, there will be a folder named &quot;quichem-pyside&quot;. Inside this
+folder will be a bunch of files. Double click on <strong>quichem-pyside.exe</strong> and
+<tt class="docutils literal">quichem</tt> will run.</p>
+<p>Currently, <tt class="docutils literal">quichem</tt> only comes in a portable format, meaning that you don't
+actually install it. This has the advantage that you can easily put <tt class="docutils literal">quichem</tt>
+on a USB key and use it on any computer.</p>
+</div>
+<div class="section" id="getting-started">
+<h1><a class="toc-backref" href="#id4">Getting Started</a></h1>
+<p>Now that <tt class="docutils literal">quichem</tt> is open, you should see a screen like this:</p>
+<div class="figure align-center">
+<img alt="images/start.png" src="images/start.png" style="width: 50%;" />
+<p class="caption"><tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> <em>upon being opened</em></p>
+</div>
+<p>The text box at the top of the window is where you can enter chemical
+equations as described below in the <a class="reference internal" href="#syntax">Syntax</a> section. The large empty area
+immediately below is where a formatted chemical equation will appear when you
+start typing. Below that is a collection of boxes which will each render your
+equation in various different formats, as described in <a class="reference internal" href="#output-formats">Output Formats</a>.</p>
+<div class="section" id="example-1">
+<h2><a class="toc-backref" href="#id5">Example 1</a></h2>
+<p>Let's jump right in and try an example. If you feel like you need to see some
+theory first, have a look at the <a class="reference internal" href="#syntax">Syntax</a> section and then come back here.</p>
+<p>To start off, we will try the following net ionic equation:</p>
+<div class="eqn container">
+H<sup>+</sup><sub>(aq)</sub> + OH<sup>−</sup><sub>(aq)</sub> ⟶ H<sub>2</sub>O<sub>(ℓ)</sub></div>
+<p>I'll break the answer into parts. To make H<sup>+</sup><sub>(aq)</sub>, type in
+<tt class="docutils literal">h=aq</tt>. The <tt class="docutils literal">h</tt> is the hydrogen. The <tt class="docutils literal">=</tt> is the positive charge. Why
+<tt class="docutils literal">=</tt> and not <tt class="docutils literal">+</tt>? You don't have to press Shift. This saves you time and
+effort, but you don't have to think about it because <tt class="docutils literal">=</tt>, and <tt class="docutils literal">+</tt> are on
+the same key. The <tt class="docutils literal">aq</tt> is the aqueous state. You don't have to bother putting
+brackets around the state because <tt class="docutils literal">quichem</tt> does that for you. Put the pieces
+together again, and we have <tt class="docutils literal">h=aq</tt>: a hydrogen that is positively charged and
+aqueous.</p>
+<p>OH<sup>−</sup><sub>(aq)</sub> can be achieved in much the same way as H<sup>+</sup><sub>(aq)</sub>. The input to make it is <tt class="docutils literal"><span class="pre">oh-aq</span></tt>.</p>
+<p>Based on what you know so far, H<sub>2</sub>O<sub>(ℓ)</sub> should be relatively
+easy to input as well. The input to make it is <tt class="docutils literal">h2ol</tt>. Note that we don't
+need a separator between the oxygen and the liquid state (because <tt class="docutils literal">l</tt> is not
+an element so it's obviously a state).</p>
+<p>Now that we have all the parts of the equation, we can put them together. A
+plus sign for adding chemical formulae together is once again created with an
+<tt class="docutils literal">=</tt>. A forward reaction arrow is created with a <tt class="docutils literal">-</tt>, like the negative
+charge. Therefore, to make the final equation, we take <tt class="docutils literal">h=aq</tt>, <tt class="docutils literal">=</tt>,
+<tt class="docutils literal"><span class="pre">oh-aq</span></tt>, <tt class="docutils literal">-</tt>, and <tt class="docutils literal">h2ol</tt>, and stick them together to get:
+<tt class="docutils literal"><span class="pre">h=aq=oh-aq-h2ol</span></tt>. This is our final input. By typing this in, we finally
+get:</p>
+<div class="eqn container">
+H<sup>+</sup><sub>(aq)</sub> + OH<sup>−</sup><sub>(aq)</sub>⟶ H<sub>2</sub>O<sub>(ℓ)</sub></div>
+</div>
+<div class="section" id="example-2">
+<h2><a class="toc-backref" href="#id6">Example 2</a></h2>
+<p>Let's do another example:</p>
+<div class="eqn container">
+CaCl<sub>2(aq)</sub> + 2 AgNO<sub>3(aq)</sub> ⟶ Ca(NO<sub>3</sub>)<sub>2(aq)</sub> + 2 AgCl<sub>(s)</sub></div>
+<p>CaCl<sub>2(aq)</sub> should be easy now based on the first example. It can be
+achieved with <tt class="docutils literal">cacl2aq</tt>. 2 AgNO<sub>3(aq)</sub> is where the trouble starts.
+You can try entering it as you think you would, but you will find that you get
+2 AgNo<sub>3(aq)</sub>. Oh no! Not <em>Nobelium</em>! Luckily for us, <tt class="docutils literal">quichem</tt>'s
+misinterpretation is easy to fix. Simply add a dot (<tt class="docutils literal">.</tt>) between the <tt class="docutils literal">n</tt>
+and the <tt class="docutils literal">o</tt>, and you will get 2 AgNO<sub>3(aq)</sub> as expected.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">You may find it very odd that <tt class="docutils literal">quichem</tt> would interpret <tt class="docutils literal">no</tt> as No and
+not NO, considering that NO is much more common in chemistry than No. If
+you care to know why <tt class="docutils literal">quichem</tt> takes the less common choice, this note
+explains. Consider this: say <tt class="docutils literal">quichem</tt> did in fact interpret <tt class="docutils literal">no</tt> as
+NO, but you happened to want to input No. There would be no clear way
+to do this. While it is easy to split <tt class="docutils literal">n</tt> and <tt class="docutils literal">o</tt>, it is not easy to
+join them together when they already are together. Of course, we could come
+up with a way, but <tt class="docutils literal">no</tt> isn't the only ambigous input you can give
+<tt class="docutils literal">quichem</tt>. Therefore, I've found that using a dot as a separator
+(&quot;disambiguifier&quot;) will give a good balance between consistency and
+flexibility.</p>
+</div>
+<p>Now we get to one of my favourite parts: parentheses (round brackets). The
+reason I like these so much is that <tt class="docutils literal">quichem</tt> automatically determines which
+parentheses are open parentheses <em>&quot;(&quot;</em> and which parentheses are close
+parentheses <em>&quot;)&quot;</em>.
+This way I don't have to worry about accidentally pressing the key for the
+wrong parenthesis. The symbol chosen for any parenthesis was a single quote
+(<tt class="docutils literal">'</tt>). I chose this because it is (depending on the font) symmetrical, and
+relatively close the the parentheses on the keyboard. As such,
+Ca(NO<sub>3</sub>)<sub>2(aq)</sub> would be rendered with the input
+<tt class="docutils literal">ca'n.o3'2aq</tt>. Everything but the brackets is exactly as you would expect,
+including the dot so we don't end up with <em>Nobelium</em> again.</p>
+<p>2 AgCl<sub>(s)</sub> should now be a piece of cake to input. Now you can take all
+of your parts: <tt class="docutils literal">cacl2aq</tt>, <tt class="docutils literal">=</tt>, <tt class="docutils literal">2agn.o3aq</tt>, <tt class="docutils literal">-</tt>, <tt class="docutils literal">ca'n.o3'2aq</tt>, <tt class="docutils literal">=</tt>
+and <tt class="docutils literal">2agcl;s</tt>, and combine them to get a final input of
+<tt class="docutils literal"><span class="pre">cacl2aq=2agn.o3aq-ca'n.o3'2aq=2agcl;s</span></tt>.</p>
+</div>
+<div class="section" id="conclusion">
+<h2><a class="toc-backref" href="#id7">Conclusion</a></h2>
+<p>These examples only brush the surface of what <tt class="docutils literal">quichem</tt> is capable of. To see
+everything that <tt class="docutils literal">quichem</tt> can do, see the <a class="reference internal" href="#syntax">Syntax</a> section below.</p>
+<p>As you practise, your speed will improve exponentially and you won't have to
+think about &quot;combining the parts together&quot; any more.</p>
+</div>
+</div>
+<div class="section" id="syntax">
+<h1><a class="toc-backref" href="#id8">Syntax</a></h1>
+<p>The <em>syntax</em>, or &quot;language&quot;, or &quot;input format&quot; of <tt class="docutils literal">quichem</tt> is broken down
+into many small parts, just like a real language is broken down into verbs,
+nouns, adjectives, and other less common parts.</p>
+<p>The full syntax description of <tt class="docutils literal">quichem</tt> is available on <tt class="docutils literal">quichem</tt>'s
+<a class="reference external" href="https://github.com/spamalot/quichem/blob/master/SYNTAX.rst">GitHub web page</a>. It explains every aspect of what you can input in
+<tt class="docutils literal">quichem</tt>, and is chock-full of specific examples.</p>
+</div>
+<div class="section" id="output-formats">
+<h1><a class="toc-backref" href="#id9">Output Formats</a></h1>
+<p><tt class="docutils literal">quichem</tt> has a variety of output formats to suit many people's needs. The
+output formats are described below.</p>
+<div class="section" id="copy-as-image">
+<h2><a class="toc-backref" href="#id10">&quot;Copy as Image&quot;</a></h2>
+<p>By clicking on the button labelled &quot;Copy as Image&quot;, you are putting an image of
+the chemical equation into your computer's clipboard. This means you can paste
+the image into different applications installed on your computer with Ctrl+V
+or with Right-Click Paste. If pasting doesn't work, the program you are
+pasting in doesn't support the file format that <tt class="docutils literal">quichem</tt> uses for images.</p>
+<div class="figure align-center">
+<img alt="images/image.png" src="images/image.png" style="width: 50%;" />
+<p class="caption"><em>An image created in</em> <tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> <em>that has been pasted into an
+image editor</em></p>
+</div>
+<p>In many programs, this pasted image can now be resized and moved around as
+you like. However, you cannot use quichem to change the text in an image
+after it has been pasted.</p>
+<div class="section" id="troubleshooting">
+<h3><a class="toc-backref" href="#id11">Troubleshooting</a></h3>
+<p><strong>When I paste, I get a black rectangle, like:</strong></p>
+<div class="figure align-center">
+<img alt="images/black.png" src="images/black.png" style="width: 50%;" />
+</div>
+<p>There is a bug in several programs (notably OpenOffice and LibreOffice) that
+prevents proper pasting of images with transparency. Until such programs
+fix this bug, paste the image from <tt class="docutils literal">quichem</tt> into an image program on top
+of the background colour of your choice. Then copy this from the image program
+into the problematic program.</p>
+<p><strong>Fraction lines are too long, like:</strong></p>
+<div class="figure align-center">
+<img alt="images/misrender.png" src="images/misrender.png" />
+</div>
+<p>You may find that this also happens in the preview area in the <tt class="docutils literal">quichem</tt>
+window.</p>
+<p>If you are running Windows, <a class="reference external" href="https://github.com/spamalot/quichem/issues/new">report it as a bug</a>. (Note you will need a GitHub
+account.) Otherwise, if you are using Linux or another operating system, this
+appears to be caused by a known bug and unfortunately cannot be resolved.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last"><strong>For technical users:</strong> This bug is in the web rendering engine used by
+<tt class="docutils literal">quichem</tt> (WebKit). Because this is currently beyond my control, you
+will have to wait until the bug is fixed and then merged into the GUI
+toolkit used by <tt class="docutils literal">quichem</tt> (PySide [Qt]).</p>
+</div>
+<p>This overly-long fraction line will only impact the preview window and the
+images copied from <tt class="docutils literal">quichem</tt>. All other output formats, including MS Word
+Equations, will be <strong>unaffected</strong>.</p>
+</div>
+</div>
+<div class="section" id="copy-as-ms-word-equation">
+<h2><a class="toc-backref" href="#id12">&quot;Copy as MS Word Equation&quot;</a></h2>
+<p>If you want to use <tt class="docutils literal">quichem</tt> output with Microsoft Word 2007 or newer, you
+can use the button labelled &quot;Copy as MS Word Equation&quot; to do so. When you
+click this button, you can now paste the equation into Microsoft Word with
+Ctrl+V or with Right-Click Paste. An equation box containing the chemical
+formula should appear. You can now manipulate it as you would any other
+Microsoft Word Equation.</p>
+<div class="figure align-center">
+<img alt="images/wordeq.png" src="images/wordeq.png" style="width: 50%;" />
+<p class="caption"><em>A chemical equation created in</em> <tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> <em>that has been pasted
+into Microsoft Word</em></p>
+</div>
+<p>Unfortunately, you can't paste MS Word Equations from <tt class="docutils literal">quichem</tt> directly into
+PowerPoint. Instead, paste in Word, copy the equation that appeared in Word,
+and then paste that into PowerPoint.</p>
+<div class="figure align-center">
+<img alt="images/ppt.png" src="images/ppt.png" style="width: 50%;" />
+<p class="caption"><em>A chemical equation created in</em> <tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> <em>that has been
+transferred to Microsoft PowerPoint</em></p>
+</div>
+<p>Using the &quot;Copy as MS Word Equation&quot; button has many advantages to using the
+&quot;Copy as Image&quot; button. Unlike images, Microsoft Word equations can be resized
+without pixelization or loss of quality. They can also be manually tweaked
+later on.</p>
+<div class="section" id="id1">
+<h3><a class="toc-backref" href="#id13">Troubleshooting</a></h3>
+<p><strong>I get a bunch of random text instead of an equation, like</strong>:</p>
+<pre class="literal-block">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;
+  &lt;msub&gt;
+    &lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;
+      &lt;mi mathvariant=&quot;normal&quot;&gt;H&lt;/mi&gt;
+    &lt;/mrow&gt;
+    &lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;
+      &lt;mn&gt;2&lt;/mn&gt;
+    &lt;/mrow&gt;
+  &lt;/msub&gt;
+  &lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;&lt;mo&gt;&amp;#x180e;&lt;/mo&gt;  &lt;/mrow&gt;
+  &lt;mrow class=&quot;MJX-TeXAtom-ORD&quot;&gt;
+    &lt;mi mathvariant=&quot;normal&quot;&gt;O&lt;/mi&gt;
+  &lt;/mrow&gt;
+&lt;/math&gt;
+</pre>
+<p>This output could be obtained for various reasons. Ensure:</p>
+<ul class="simple">
+<li>you are pasting into Microsoft Word and not another program such as
+OpenOffice of Microsoft Excel.</li>
+<li>you are pasting into Microsoft Word 2007 or newer. This will <strong>not</strong> work in
+Word 2003.</li>
+</ul>
+<p>Still not working? <a class="reference external" href="https://github.com/spamalot/quichem/issues/new">Report it as a bug</a>! (Note you will need a GitHub
+account.)</p>
+</div>
+</div>
+<div class="section" id="copy-as-formatted-text">
+<h2><a class="toc-backref" href="#id14">&quot;Copy as Formatted Text&quot;</a></h2>
+<p>If you want to use <tt class="docutils literal">quichem</tt> output with programs that support editing of
+formatted text (e.g. Microsoft Word), you can use the &quot;Copy as Formatted Text&quot;
+button. When you click this button, you can now paste the equation into many
+formatted text editing applications with Ctrl+V or with Right-Click Paste. If
+the software you are pasting into doesn't support formatted text, quichem will
+paste plain text instead.</p>
+<div class="figure align-center">
+<img alt="images/formatted.png" src="images/formatted.png" style="width: 50%;" />
+<p class="caption"><em>A chemical equation created in</em> <tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> <em>that has been pasted
+into various programs which support formatted text editing.</em></p>
+</div>
+</div>
+<div class="section" id="plain-text-plain">
+<h2><a class="toc-backref" href="#id15">Plain Text: <tt class="docutils literal">plain</tt></a></h2>
+<p>The plain text output was designed for situations where you want to have a
+pretty chemical equation, but where you aren't able to use formatted text.
+Emails are a good example of where plain text output would be useful.</p>
+<div class="figure align-center">
+<img alt="images/email.png" src="images/email.png" style="width: 50%;" />
+<p class="caption"><em>A chemical equation created in</em> <tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> <em>that has been pasted
+into an email</em></p>
+</div>
+<p>Plain text output will not work on computers with old operating systems (e.g.
+Windows 2000, Windows XP machines that haven't been updated in years, etc.) or
+with older software. For compatibility with these systems and with this
+software, use the <a class="reference internal" href="#plain-text-ascii-output">plain text ASCII output</a> instead of plain text output.</p>
+<div class="section" id="id2">
+<h3><a class="toc-backref" href="#id16">Troubleshooting</a></h3>
+<p><strong>Parts of the equation look like ? when I paste it</strong></p>
+<p>You see this funny character because your computer (either the operating system
+or the program you are using) is unable to display a part of the equation
+properly. You can try resolving this by pasting into a different program. If
+the problem persists, use a different computer or paste the
+<a class="reference internal" href="#plain-text-ascii-output">plain text ASCII output</a> instead of the plain text output.</p>
+</div>
+</div>
+<div class="section" id="plain-text-for-old-computers-plain-ascii">
+<span id="plain-text-ascii-output"></span><h2><a class="toc-backref" href="#id17">Plain Text for Old Computers: <tt class="docutils literal">plain_ASCII</tt></a></h2>
+<p>The plain text ASCII output was designed with old computers and online software
+in mind. If you need unformatted output compatible with older computers, plain
+text ASCII output is what you should use. This output format is most similar to
+what you would type into programs like online chemical equation balancers, so
+with minimal tweaking, you can take this output and use it with such programs.</p>
+<div class="figure align-center">
+<img alt="images/balance.png" src="images/balance.png" style="width: 50%;" />
+<p class="caption"><em>A chemical equation created in</em> <tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> <em>that has been pasted
+into an online chemical equation balancing tool</em></p>
+</div>
+</div>
+<div class="section" id="web-page-format-html">
+<h2><a class="toc-backref" href="#id18">Web Page Format: <tt class="docutils literal">HTML</tt></a></h2>
+<p>Use HTML output if you are putting chemical equations in a web page. (Also,
+many forums and online discussion groups which allow formatted text can
+understand this format).</p>
+<div class="figure align-center">
+<img alt="images/html.png" src="images/html.png" style="width: 50%;" />
+<p class="caption"><em>A chemical equation created in</em> <tt class="docutils literal"><span class="pre">quichem-pyside</span></tt> <em>that has been added
+to a web page</em></p>
+</div>
+<div class="hint">
+<p class="first admonition-title">Hint</p>
+<p class="last">Personally, I prefer using the <a class="reference internal" href="#latex-output">LaTeX output</a> and then rendering it with a
+JavaScript tool called MathJax, however this requires significantly more
+set-up and web programming knowledge (and it needs JavaScript).</p>
+</div>
+</div>
+<div class="section" id="typeset-documents-latex-and-latex-mhchem-v3">
+<span id="latex-output"></span><h2><a class="toc-backref" href="#id19">Typeset Documents: <tt class="docutils literal">LaTeX</tt> and <tt class="docutils literal">LaTeX_mhchem_V3</tt></a></h2>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you don't know what LaTeX is (no, I'm not referring to the plastic), you
+will not find this section relevant.</p>
+</div>
+<p>For researchers, students and others who need to put chemical equations in
+LaTeX documents, <tt class="docutils literal">quichem</tt> can export to two different formats compatible
+with LaTeX. The <tt class="docutils literal">LaTeX</tt> format uses pure LaTeX for output, which means that
+you don't have to include any additional packages. The output is contained in a
+math environment, which means that the chemical equation will be typeset using
+the font that you specified for your math environments.</p>
+<p>The second LaTeX format that <tt class="docutils literal">quichem</tt> exports to is <tt class="docutils literal">LaTeX_mhchem_V3</tt>. If
+you have the <tt class="docutils literal">mhchem</tt> package installed, put <tt class="docutils literal">\usepackage{mhchem}</tt> in
+your document header and then you can use the <tt class="docutils literal">LaTeX_mhchem_V3</tt> output in
+your document. This has the disadvantage that you need to include an extra
+package, but the advantage that the chemical equation in the rendered LaTeX
+document will look more professional than that rendered with the <tt class="docutils literal">LaTeX</tt>
+output.</p>
+<div class="hint">
+<p class="first admonition-title">Hint</p>
+<p class="last">I recommend using <tt class="docutils literal">mhchem</tt> version 3.15 or newer, because its output has
+better consistency with international style guidelines than its older
+versions.</p>
+</div>
+</div>
+<div class="section" id="restructuredtext">
+<h2><a class="toc-backref" href="#id20"><tt class="docutils literal">reStructuredText</tt></a></h2>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you don't know what either Markdown or reStructuredText are, you
+will not find this section relevant.</p>
+</div>
+<p>reStructuredText is a markup language similar to Markdown. It is used by
+many programmers to write documentation for code, but can be used outside
+this domain as well. In fact, reStructuedText was used to write this
+User Guide, and all of the chemical equations in this document were created
+with <tt class="docutils literal">quichem</tt>.</p>
+<div class="hint">
+<p class="first admonition-title">Hint</p>
+<p class="last">If you need <tt class="docutils literal">quichem</tt> to create output for Markdown, the <tt class="docutils literal">HTML</tt>
+output will work directly.</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

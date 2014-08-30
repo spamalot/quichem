@@ -71,13 +71,17 @@ def make_parser():
     element_word = OR(*ELEMENTS.split())
     dot = L('.')
     semicolon = L(';')
-    dash = L('-', tags=('sign', 'separator'))
-    equals = L('=', tags=('sign', 'separator'))
-    slash = L('/', tags=('separator',))
+    comma = L(',')
+    hyphen = L('-', tags=('sign',))
+    equals = L('=', tags=('sign',))
+    slash = L('/')
+    stoichiometric = GRAMMAR(equals, comma) | (comma, equals)
+    leftright = GRAMMAR(hyphen, slash)
+    equilibrium = GRAMMAR(equals, slash)
     state_word = GRAMMAR(
         OR(*(L(state, tags=('state_word',)) for state in STATES.split())),
         collapse=True, desc='state')
-    number = RE(r'\d+', tags=('number',))
+    number = RE(r'\d+', tags=('number',), desc='number')
     decimal = RE(r'\d+\.\d*|\.\d+', tags=('decimal',))
     parenthesis = L("'")
 
@@ -96,7 +100,7 @@ def make_parser():
     state = fixes.g([OPTIONAL(semicolon), state_word], 'state', tokens.State)
     coefficient = fixes.g([decimal | (number, OPTIONAL(slash, number))],
                           'coefficient', tokens.Coefficient)
-    charge = fixes.g([OPTIONAL(number), (equals | dash)],
+    charge = fixes.g([OPTIONAL(number), (equals | hyphen)],
                      'charge', tokens.Charge)
     # We need to have both a stateless item and a item with a state
     # to ensure that a stateless item have higher precedence (e.g. to
@@ -114,7 +118,9 @@ def make_parser():
     # We have an optional semicolon here to allow for distinction
     # between a sign + state and a separator + element (e.g.
     # positively charged solid vs. plus sulphur).
-    separator = fixes.g([OPTIONAL(semicolon), (equals | dash | slash)],
+    separator = fixes.g([OPTIONAL(semicolon),
+                         GRAMMAR(stoichiometric | leftright | equilibrium | equals |
+                          hyphen | slash, tags=('separator_word',))],
                         'separator', tokens.Separator)
 
     class Grammar(modgrammar.Grammar):

@@ -86,14 +86,7 @@ class Separator(DisplayFragment):
     """
 
     def compile_parts(self, token):
-        if token.type_ == '=':
-            return (self.literals['='],)
-        if token.type_ == '-':
-            return (self.literals['-'],)
-        if token.type_ == '/':
-            return (self.literals['/'],)
-        # FIXME: make a custom exception
-        raise Exception('Separator not supported.')
+        return (self.literals[token.type_],)
 
 
 class Coefficient(DisplayFragment):

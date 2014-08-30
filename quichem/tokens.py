@@ -143,7 +143,6 @@ class Coefficient(Token):
     def grammar_init(self):
         self.numerator, self.denominator = string(self.find('decimal')), '1'
         if self.numerator is None:
-            # FIXME: this won't work
             self.numerator, self.denominator = (
                 list(map(string, self.find_all('number'))) + ['1'])[:2]
 
@@ -211,12 +210,14 @@ class Separator(Token):
     Attributes
     ----------
     type_ : string
-        The type of separator (either "=", "-", or "/").
+        The type of separator ("=", "-", "/", "=,", "-/", or "=/").
 
     """
 
     def grammar_init(self):
-        self.type_ = string(self.find('separator'))
+        self.type_ = string(self.find('separator_word'))
+        if self.type_ == ',=':
+            self.type_ = '=,'
 
     def __repr__(self):
         return 'Separator[{}]'.format(self.type_)
