@@ -1,4 +1,5 @@
 .. _SourceForge page: http://sourceforge.net/projects/quichem
+.. _user guide: https://cdn.rawgit.com/spamalot/quichem/263b840dbba5892106650a6fb93efed1749a900c/userguide/USERGUIDE.html
 
 ===========
 ``quichem``
@@ -19,7 +20,7 @@ Quick Links
 + *Looking for the Windows application?* Download it from ``quichem``'s
   `SourceForge page`_.
 + *Don't know where to get started?* Have a look at the
-  `user guide <userguide/USERGUIDE.html>`_.
+  `user guide`_.
 + *Want to use* ``quichem`` *as a LaTeX package?* Have a look at its
   `README <latex/README.txt>`_ and `documentation <latex/quichem.pdf>`_.
 

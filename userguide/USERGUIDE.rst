@@ -6,6 +6,8 @@
 ``quichem-pyside`` User Guide
 =============================
 
+:Last Updated: 2014-08-29
+
 Thanks for trying out ``quichem-pyside``. I've written this user guide as an
 informal, technical-jargon-free place for chemists to get started using
 ``quichem`` on Windows (and other operating systems too).
