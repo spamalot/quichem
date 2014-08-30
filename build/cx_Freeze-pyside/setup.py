@@ -20,8 +20,8 @@ sys.path.insert(0, '../..')
 
 build_exe_options = {
     'packages': ['quichem'],
-     'includes': ['pyparsing', 'PySide', 'PySide.QtCore', 'PySide.QtGui'],
-     'excludes': ['tkinter', 'ttk', 'socket', 'doctest', 'pdb',
+     'includes': ['modgrammar', 'PySide', 'PySide.QtCore', 'PySide.QtGui'],
+     'excludes': ['tkinter', 'ttk', 'wx', 'socket', 'doctest', 'pdb',
                   'unittest', 'difflib', 'inspect', '_bz2',
                   '_hashlib', '_lzma', '_socket', '_ssl'],
      'optimize': True,

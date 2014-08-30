@@ -20,7 +20,7 @@ import collections
 import re
 import sys
 import os
-import cgi
+import html
 
 from modgrammar import ParseError
 
@@ -72,7 +72,7 @@ class GenericGui(object):
     @property
     def html(self):
         if self._ast is None:
-            return cgi.escape(str(e))
+            return html.escape(str(e))
         return COMPILERS['HTML'].compile(self._ast)
 
     @property
