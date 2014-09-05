@@ -24,8 +24,9 @@ build_exe_options = {
      'excludes': ['tkinter', 'ttk', 'wx', 'socket', 'doctest', 'pdb',
                   'unittest', 'difflib', 'inspect', '_bz2',
                   '_hashlib', '_lzma', '_socket', '_ssl'],
-     'optimize': True,
+     'optimize': 2,
      'compressed': True,
+     'include_msvcr': True,
      }
 
 base = None
