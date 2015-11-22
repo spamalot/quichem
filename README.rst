@@ -1,4 +1,4 @@
-.. _SourceForge page: http://sourceforge.net/projects/quichem
+.. _releases section: https://github.com/spamalot/quichem/releases
 .. _user guide: https://cdn.rawgit.com/spamalot/quichem/263b840dbba5892106650a6fb93efed1749a900c/userguide/USERGUIDE.html
 
 ===========
@@ -18,7 +18,7 @@ under the LPPL v1.3 or newer.
 Quick Links
 -----------
 + *Looking for the Windows application?* Download it from ``quichem``'s
-  `SourceForge page`_.
+  `releases section`_.
 + *Don't know where to get started?* Have a look at the
   `user guide`_.
 + *Want to use* ``quichem`` *as a LaTeX package?* Have a look at its
@@ -45,13 +45,13 @@ Current Output Format Support
 -----------------------------
 
 - plain text
-- plain text (ASCII only) **(NEW)**
+- plain text (ASCII only)
 - reStructuredText
 - HTML
 - LaTeX
 - LaTeX for the ``mchem`` package
-- Microsoft Word (with ``quichem-pyside``, the Qt GUI front-end) **(NEW)**
-- PNG image (with ``quichem-pyside``, the Qt GUI front-end) **(NEW)**
+- Microsoft Word (with ``quichem-pyside``, the Qt GUI front-end)
+- PNG image (with ``quichem-pyside``, the Qt GUI front-end)
 
 
 Installation
@@ -91,11 +91,14 @@ Dependencies
 
 Binaries
 ++++++++
+
 Windows binaries for the ``PySide`` ``quichem`` front-end can be downloaded
-from  ``quichem``'s `SourceForge page`_. The binaries are created with
-``cx_Freeze``, so Python does not have to be installed for them to run.
+from the `releases section`_. The binaries are created with ``cx_Freeze``, so
+Python does not have to be installed for them to run.
 
 There are currently no pre-built binaries for the ``wxPython`` front-end.
+
+``quichem`` binaries are no longer being hosted at SourceForge.
 
 
 Installing as a Python Package
@@ -158,7 +161,7 @@ The Windows binary will be located in ``build/``.
 Screenshots
 -----------
 
-.. figure:: http://c.fsdn.com/con/app/proj/quichem/screenshots/screenshot2.png
+.. figure:: screenshot.png
 
     ``quichem-pyside`` *running on Windows 7.*
 
